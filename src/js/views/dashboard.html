@@ -1,0 +1,39 @@
+<oj-bind-if test="[[ currentPage() === 'page1' ]]">
+  <account-type 
+    next-callback="[[nextPage]]">
+  </account-type>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page2' ]]">
+  <account-number 
+    next-callback="[[nextPage]]" 
+    back-callback="[[previousPage]]">
+  </account-number>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page3' ]]">
+  <input-username 
+    next-callback="[[nextPage]]" 
+    back-callback="[[previousPage]]">
+  </input-username>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page4' ]]">
+  <input-password 
+    next-callback="[[nextPage]]" 
+    back-callback="[[previousPage]]">
+  </input-password>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page5' ]]">
+  <terms-conditions 
+    next-callback="[[nextPage]]" 
+    back-callback="[[previousPage]]">
+  </terms-conditions>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page6' ]]">
+  <user-confirmation 
+    back-callback="[[previousPage]]">
+  </user-confirmation>
+</oj-bind-if>
