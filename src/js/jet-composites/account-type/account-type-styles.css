@@ -82,7 +82,7 @@ body {
     flex-direction: column;
     align-items: center;
     color: #413e3e9d;
-    width: 2.5%;
+    width: 20%;
 }
 
 .option img {
@@ -93,6 +93,11 @@ body {
 .option span, .option-label {
     display: block;
     text-align: center;
+}
+
+option.active {
+    background-color: #7d4b87;
+    color: white;
 }
 
 .cnic-section {

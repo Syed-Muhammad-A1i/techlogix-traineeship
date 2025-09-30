@@ -4,6 +4,30 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
     
     function tncViewModel() {
         var self = this;
+
+        // Next button click handler in your component
+        self.nextButtonClick = function() {
+            console.log('hello');
+            
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'next',
+              from: 'page5'
+            },
+            bubbles: true  // This ensures the event bubbles up
+          }));
+        };
+
+        // Back button click handler in your component
+        self.backButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'previous', 
+              from: 'page5'
+            },
+            bubbles: true
+          }));
+        };
                 // Progress Steps Configuration
         self.steps = ko.observableArray([
             { number: 1, title: 'Account Type' },
@@ -13,57 +37,17 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         ]);
 
         self.currentStep = ko.observable(4); // Current active step
-
-        // Function to go to next step
-        self.goToNextStep = function() {
-            if (self.currentStep() < self.steps().length) {
-                self.currentStep(self.currentStep() + 1);
-            }
-        };
-
-        // Function to go to previous step
-        self.goToPreviousStep = function() {
-            if (self.currentStep() > 1) {
-                self.currentStep(self.currentStep() - 1);
-            }
-        };
-
+    
         // Previous Step function
         self.previousStep = function () {
-            self.goToPreviousStep();
+            self.backButtonClick();
         };
 
         // Next Step function with validation
-        self.nextStep = function () {
-            if (!self.isValid()) {
-                // Use Oracle JET dialog or logger instead of alert
-                oj.Logger.error("Please enter a valid username (8-16 characters).");
-                
-                // Optionally show an Oracle JET message
-                if (typeof self.showMessage === 'function') {
-                    self.showMessage({
-                        severity: 'error',
-                        summary: 'Validation Error',
-                        detail: 'Please enter a valid username (8-16 characters).',
-                        autoTimeout: 5000
-                    });
-                }
-                return;
-            }
-            
+        self.nextStep = function () {            
             // If validation passes, go to next step
-            self.goToNextStep();
-            oj.Logger.info("Proceeding with Username: " + self.username());
+            self.nextButtonClick();
             
-            // Optionally show success message
-            if (typeof self.showMessage === 'function') {
-                self.showMessage({
-                    severity: 'confirmation',
-                    summary: 'Success',
-                    detail: 'Username validated successfully!',
-                    autoTimeout: 3000
-                });
-            }
         };
         
         /**

@@ -6,8 +6,28 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
 
     function AccountDetailsViewModel(context) {
         var self = this;
-        self.next = context.properties['nextCallback'];
-        self.back = context.properties['backCallback'];        
+        
+      // Next button click handler in your component
+        self.nextButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'next',
+              from: 'page2'
+            },
+            bubbles: true  // This ensures the event bubbles up
+          }));
+        };
+
+        // Back button click handler in your component
+        self.backButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'previous', 
+              from: 'page2'
+            },
+            bubbles: true
+          }));
+        };
         
         // Observable for selected option
         self.selectedOption = ko.observable('accountNumber');
@@ -78,29 +98,9 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             return self.isAccNoValid() ? 'valid' : 'invalid';
         });
 
-        // Function to go to next step
-        self.goToNextStep = function() {
-            if (self.currentStep() < self.steps().length) {
-                self.currentStep(self.currentStep() + 1);
-            }
-            if (typeof self.next === 'function') {
-              self.next(); // calls parent AppController.nextPage()
-            }
-        };
-
-        // Function to go to previous step
-        self.goToPreviousStep = function() {
-            if (self.currentStep() > 1) {
-                self.currentStep(self.currentStep() - 1);
-            }
-            if (typeof self.back === 'function') {
-              self.back();
-            }
-        };
-
         // Previous Step function
         self.previousStep = function () {
-            self.goToPreviousStep();
+            self.backButtonClick();
         };
 
         // Next Step function with validation
@@ -114,34 +114,11 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             }
             
             // If validation passes, go to next step
-            self.goToNextStep();
+            self.nextButtonClick();
             oj.Logger.info("Proceeding with Account Number: " + self.formattedAccountNumber());
         };
         
-        /**
-         * Optional: ViewModel lifecycle methods for Oracle JET
-         */
         
-        // Called when ViewModel is activated
-        self.activate = function(context) {
-            // Implementation for activation if needed
-            return Promise.resolve();
-        };
-        
-        // Called when ViewModel is transitioning away
-        self.deactivate = function() {
-            // Cleanup if needed
-            return Promise.resolve();
-        };
-        
-        // Called when ViewModel is disposed
-        self.dispose = function() {
-            // Cleanup computed observables
-            self.formattedAccountNumber.dispose();
-            self.isAccNoValid.dispose();
-            self.validationMessage.dispose();
-            self.validationState.dispose();
-        };
     }
     
     return AccountDetailsViewModel;

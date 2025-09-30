@@ -7,7 +7,27 @@
 'use strict';
 define(
     ['knockout', 'ojL10n!./resources/nls/user-confirmation-strings', 'ojs/ojcontext', 'ojs/ojknockout'], function (ko, componentStrings, Context) {
-    
+    // Next button click handler in your component
+    self.nextButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: {
+          action: 'next',
+          from: 'page6'
+        },
+        bubbles: true  // This ensures the event bubbles up
+      }));
+    };
+
+    // Back button click handler in your component
+    self.backButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: {
+          action: 'previous', 
+          from: 'page6'
+        },
+        bubbles: true
+      }));
+    };
     function SuccessViewModel() {
     var self = this;
     self.username = ko.observable('03221234567');

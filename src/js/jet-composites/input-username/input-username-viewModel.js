@@ -13,6 +13,29 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         // Observable for selected option (if needed for this step)
         self.selectedOption = ko.observable('accountNumber');
         
+        // Next button click handler in your component
+        self.nextButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'next',
+              from: 'page3'
+            },
+            bubbles: true  // This ensures the event bubbles up
+          }));
+        };
+
+        // Back button click handler in your component
+        self.backButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'previous', 
+              from: 'page3'
+            },
+            bubbles: true
+          }));
+        };
+
+
         // Function to select option
         self.selectOption = function(option) {
             self.selectedOption(option);
@@ -59,23 +82,9 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             return self.isValid() && self.username().length > 0;
         });
 
-        // Function to go to next step
-        self.goToNextStep = function() {
-            if (self.currentStep() < self.steps().length) {
-                self.currentStep(self.currentStep() + 1);
-            }
-        };
-
-        // Function to go to previous step
-        self.goToPreviousStep = function() {
-            if (self.currentStep() > 1) {
-                self.currentStep(self.currentStep() - 1);
-            }
-        };
-
         // Previous Step function
         self.previousStep = function () {
-            self.goToPreviousStep();
+            self.backButtonClick();
         };
 
         // Next Step function with validation
@@ -97,7 +106,7 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             }
             
             // If validation passes, go to next step
-            self.goToNextStep();
+            self.nextButtonClick();
             oj.Logger.info("Proceeding with Username: " + self.username());
             
             // Optionally show success message

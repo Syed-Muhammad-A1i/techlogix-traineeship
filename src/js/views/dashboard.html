@@ -1,4 +1,4 @@
-<oj-bind-if test="[[ currentPage() === 'page1' ]]">
+<!-- <oj-bind-if test="[[ currentPage() === 'page1' ]]">
   <account-type 
     next-callback="[[nextPage]]">
   </account-type>
@@ -36,4 +36,32 @@
   <user-confirmation 
     back-callback="[[previousPage]]">
   </user-confirmation>
+</oj-bind-if> -->
+
+<oj-bind-if test="[[ currentPage() === 'page1' ]]">
+  <account-type></account-type>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page2' ]]">
+  <account-number 
+    account-number="[[ $parent.sharedState.accountNumber ]]"
+    iban="[[ $parent.sharedState.iban ]]"
+    selected-option="[[ $parent.sharedState.selectedOption ]]">
+  </account-number>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page3' ]]">
+  <input-username></input-username>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page4' ]]">
+  <input-password></input-password>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page5' ]]">
+  <terms-conditions></terms-conditions>
+</oj-bind-if>
+
+<oj-bind-if test="[[ currentPage() === 'page6' ]]">
+  <user-confirmation></user-confirmation>
 </oj-bind-if>

@@ -1,8 +1,28 @@
 define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
   function Page1ViewModel(context) {
     var self = this;
-    self.next = context.properties['nextCallback'];
-    self.back = context.properties['backCallback'];        
+    
+    // Next button click handler in your component
+    self.nextButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: {
+          action: 'next',
+          from: 'page1'
+        },
+        bubbles: true  // This ensures the event bubbles up
+      }));
+    };
+
+    // Back button click handler in your component
+    self.backButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: {
+          action: 'previous', 
+          from: 'page1'
+        },
+        bubbles: true
+      }));
+    };
         
     self.steps = ko.observableArray([
       { number: 1, title: 'Account Type' },
@@ -12,24 +32,6 @@ define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
     ]);
     self.currentStep = ko.observable(1);
 
-    self.goToNextStep = function () {
-      // if (self.currentStep() < self.steps().length) {
-      //   self.currentStep(self.currentStep() + 1);
-      // }
-      if (typeof self.next === 'function') {
-        self.next(); // calls parent AppController.nextPage()
-      }
-      console.log("Next from Account Type")
-    };
-    self.goToPreviousStep = function () {
-      // if (self.currentStep() > 1) {
-      //   self.currentStep(self.currentStep() - 1);
-      // }
-      if (typeof self.back === 'function') {
-        self.back();
-      }
-      console.log("Back from Account Type")
-    };
 
     // Account types
     self.accountTypes = ko.observableArray([
@@ -72,7 +74,7 @@ define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
     
     // Navigation
     self.previousStep = function() {
-      self.goToPreviousStep();
+      self.backButtonClick();
     };
     self.nextStep = function() {
       self.cnicEdited(true);
@@ -85,7 +87,7 @@ define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
         return;
       }
 
-      self.goToNextStep();
+      self.nextButtonClick();
     };
   }
 

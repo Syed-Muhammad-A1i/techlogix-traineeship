@@ -6,8 +6,28 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
     
     function PasswordStepViewModel() {
         var self = this;
-        self.next = context.properties['nextCallback'];
-        self.back = context.properties['backCallback'];
+        
+        // Next button click handler in your component
+        self.nextButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'next',
+              from: 'page4'
+            },
+            bubbles: true  // This ensures the event bubbles up
+          }));
+        };
+
+        // Back button click handler in your component
+        self.backButtonClick = function() {
+          document.dispatchEvent(new CustomEvent('navigation', {
+            detail: {
+              action: 'previous', 
+              from: 'page4'
+            },
+            bubbles: true
+          }));
+        };
         // Observable for selected option
         self.selectedOption = ko.observable('accountNumber');
         
@@ -31,20 +51,6 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         ]);
 
         self.currentStep = ko.observable(4); // Current active step
-
-        // Function to go to next step
-        self.goToNextStep = function() {
-            if (self.currentStep() < self.steps().length) {
-                self.currentStep(self.currentStep() + 1);
-            }
-        };
-
-        // Function to go to previous step
-        self.goToPreviousStep = function() {
-            if (self.currentStep() > 1) {
-                self.currentStep(self.currentStep() - 1);
-            }
-        };
 
         // Password observables
         self.password = ko.observable('');
@@ -147,7 +153,7 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         
         // Updated Button Functions
         self.previousStep = function () {
-            self.goToPreviousStep();
+            self.backButtonClick();
         };
 
         self.nextStep = function () {
@@ -157,7 +163,7 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             }
             
             // If validation passes, go to next step
-            self.goToNextStep();
+            self.nextButtonClick();
             alert("✅ Proceeding to next step!");
         };
         
