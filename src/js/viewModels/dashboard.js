@@ -10,7 +10,7 @@ define(['knockout',
     var self = this;
 
     // Current visible page
-    self.currentPage = ko.observable('page2');
+    self.currentPage = ko.observable('page1');
 
     // Shared state across components
     self.sharedState = {
