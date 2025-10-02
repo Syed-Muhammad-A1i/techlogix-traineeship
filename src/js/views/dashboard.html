@@ -39,14 +39,12 @@
 </oj-bind-if> -->
 
 <oj-bind-if test="[[ currentPage() === 'page1' ]]">
-  <account-type></account-type>
+  <account-type data-bind="cnic"></account-type>
 </oj-bind-if>
 
 <oj-bind-if test="[[ currentPage() === 'page2' ]]">
   <account-number 
-    account-number="[[ $parent.sharedState.accountNumber ]]"
-    iban="[[ $parent.sharedState.iban ]]"
-    selected-option="[[ $parent.sharedState.selectedOption ]]">
+    data-bind="accountNumber">
   </account-number>
 </oj-bind-if>
 
@@ -63,5 +61,6 @@
 </oj-bind-if>
 
 <oj-bind-if test="[[ currentPage() === 'page6' ]]">
-  <user-confirmation></user-confirmation>
+  <user-confirmation  
+    data-bind="accountNumber"></user-confirmation>
 </oj-bind-if>

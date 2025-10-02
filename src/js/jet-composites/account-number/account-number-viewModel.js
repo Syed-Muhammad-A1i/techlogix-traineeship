@@ -1,10 +1,10 @@
 /**
  * Account Details ViewModel for Oracle JET
  */
-define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
     'use strict';
 
-    function AccountDetailsViewModel(context) {
+    function AccountDetailsViewModel() {
         var self = this;
         
       // Next button click handler in your component
@@ -33,7 +33,7 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         self.selectedOption = ko.observable('accountNumber');
         
         // Observable for account number
-        self.accountNumber = ko.observable('');
+        self.accountNumber = wizardState.accountNumber;
         
         // Observable for IBAN
         self.iban = ko.observable('');

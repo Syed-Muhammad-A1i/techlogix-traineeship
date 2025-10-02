@@ -25,7 +25,7 @@
   <h2 class="section-title">Create Login Details <span class="step-indicator">(1/2)</span></h2>
   <h3 class="Username-title">Username</h3><br>
   <div class="input-container">
-    <input type="text" class="form-input" placeholder="Enter username"
+    <input type="text" class="form-input" placeholder="Enter username" maxlength="16" minlength="8"
           data-bind="value: username, valueUpdate: 'afterkeydown', css: { 'valid': isValid }">
     <span class="status-icon" data-bind="visible: isValid()"><img src="css/images/green-tick.png" alt="Valid" /></span>
   </div>

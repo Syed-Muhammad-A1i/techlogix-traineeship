@@ -6,36 +6,19 @@
 */
 'use strict';
 define(
-    ['knockout', 'ojL10n!./resources/nls/user-confirmation-strings', 'ojs/ojcontext', 'ojs/ojknockout'], function (ko, componentStrings, Context) {
-    // Next button click handler in your component
-    self.nextButtonClick = function() {
-      document.dispatchEvent(new CustomEvent('navigation', {
-        detail: {
-          action: 'next',
-          from: 'page6'
-        },
-        bubbles: true  // This ensures the event bubbles up
-      }));
-    };
-
-    // Back button click handler in your component
-    self.backButtonClick = function() {
-      document.dispatchEvent(new CustomEvent('navigation', {
-        detail: {
-          action: 'previous', 
-          from: 'page6'
-        },
-        bubbles: true
-      }));
-    };
+    ['knockout', 'ojL10n!./resources/nls/user-confirmation-strings', 'ojs/ojcontext', 'ojs/ojknockout' , 'state/wizardState'], function (ko, wizardState, componentStrings, Context) {
+    
     function SuccessViewModel() {
-    var self = this;
-    self.username = ko.observable('03221234567');
-    self.accountTitle = ko.observable('ALI KHAN');
-    self.accountNumber = ko.observable('01535400052790');
+      var self = this;
+      self.username = ko.observable('03221234567');
+      self.accountTitle = ko.observable('ALI KHAN');
+      self.accountNumber = wizardState.accountNumber;
+
+      console.log(wizardState.accountNumber);
+      
     }
 
-    ;
+    
 
     return SuccessViewModel;
 });
