@@ -46,7 +46,11 @@
     color: #413e3e9d;
     width: 20%;
 }
-
+.option.active{
+    border-bottom: 3px solid #6a1b9a;
+    color: #6a1b9a;
+    background: #fff;
+}
 
 .option img {
     display: block;
