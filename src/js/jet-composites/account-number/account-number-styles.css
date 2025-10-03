@@ -56,7 +56,8 @@
     max-width: 50%;
     box-sizing: border-box;
 }
-.option:hover {
+
+.options:hover {
     opacity: 0.9;
     transform: translateY(-2px);
 }
