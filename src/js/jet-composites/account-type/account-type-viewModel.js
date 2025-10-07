@@ -1,4 +1,4 @@
-define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
+define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function(ko, Router, wizardState) {
   function Page1ViewModel(context) {
     var self = this;
     
@@ -33,19 +33,21 @@ define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
     self.currentStep = ko.observable(1);
 
 
+    //Component Functionality Start Here
+    self.cnicNumberRaw = wizardState.cnic; // directly use shared state
+    self.selectedAccountType = wizardState.accountType;
     // Account types
     self.accountTypes = ko.observableArray([
         { id: 1, name: "Individual", defaultImage: "css/images/Individual-Icon-Unfilled.svg", selectedImage: "css/images/Individual-Icon-Filled.svg" },
         { id: 2, name: "Foreign National", defaultImage: "css/images/Foreign-National-Icon-Unfilled.svg", selectedImage: "css/images/Foreign-National-Icon-Filled.svg" }
     ]);
-    self.selectedAccountType = ko.observable();
 
     self.selectAccountType = function(item) {
-      self.selectedAccountType(item.id);
+      self.selectedAccountType(item.name);
+      wizardState.accountType(item.name); // update shared state
     };
-
-    // CNIC validation
-    self.cnicNumberRaw = ko.observable("");
+    
+    // self.cnicNumberRaw = ko.observable("");
     self.cnicEdited = ko.observable(false);
 
     self.formattedCnicNumber = ko.computed({
@@ -69,7 +71,7 @@ define(['knockout', 'ojs/ojrouter'], function(ko, Router) {
     });
     
     self.isCnicValid = ko.computed(function () {
-      return /^\d{13}$/.test(self.cnicNumberRaw());
+      return /^\d{13}$/.test(wizardState.cnic());
     });
     
     // Navigation

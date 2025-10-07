@@ -29,23 +29,6 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
           }));
         };
         
-        // Observable for selected option
-        self.selectedOption = ko.observable('accountNumber');
-        
-        // Observable for account number
-        self.accountNumber = wizardState.accountNumber;
-        
-        // Observable for IBAN
-        self.iban = ko.observable('');
-        
-        // Track if account number has been edited
-        self.accEdited = ko.observable(false);
-        
-        // Function to select option
-        self.selectOption = function(option) {
-            self.selectedOption(option);
-        };
-
         // Progress Steps Configuration
         self.steps = ko.observableArray([
             { number: 1, title: 'Account Type' },
@@ -56,19 +39,33 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 
         self.currentStep = ko.observable(2); // Current active step
 
+        //Component Functionality Start Here
+        // Observable for selected option
+        self.accountNumber = wizardState.accountNumber;
+        self.iban = wizardState.iban;
+        self.selectedOption = wizardState.selectedOption;
+        
+        // Track if account number has been edited
+        self.accEdited = ko.observable(false);
+        
+        // Function to select option
+        self.selectOption = function(option) {
+            self.selectedOption(option);
+        };
+
         // Computed for formatted account number
         self.formattedAccountNumber = ko.computed({
             read: function () {
                 let value = self.accountNumber().replace(/\D/g, "");
                 if (value.length > 13) value = value.substring(0, 14);
 
-                let part1 = value.substring(0, 5);
-                let part2 = value.substring(5, 14);
+                // let part1 = value.substring(0, 5);
+                // let part2 = value.substring(5, 14);
 
-                let formatted = part1;
-                if (part2) formatted += "-" + part2;
+                // let formatted = part1;
+                // if (part2) formatted += "-" + part2;
 
-                return formatted;
+                return value;
             },
             write: function (val) {
                 self.accountNumber(val.replace(/\D/g, ""));

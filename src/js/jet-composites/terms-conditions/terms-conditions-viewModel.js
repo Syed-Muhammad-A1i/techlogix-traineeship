@@ -50,64 +50,6 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             
         };
         
-        /**
-         * Optional: Reset function to clear form
-         */
-        self.resetForm = function() {
-            self.username("");
-        };
-        
-        /**
-         * ViewModel lifecycle methods for Oracle JET
-         */
-        
-        // Called when ViewModel is activated
-        self.activate = function(context) {
-            // Implementation for activation if needed
-            oj.Logger.info("UsernameStepViewModel activated");
-            return Promise.resolve();
-        };
-        
-        // Called when ViewModel is transitioning away
-        self.deactivate = function() {
-            // Cleanup if needed
-            oj.Logger.info("UsernameStepViewModel deactivated");
-            return Promise.resolve();
-        };
-        
-        /**
-         * Optional: Message handling for Oracle JET messages
-         */
-        self.messageManager = ko.observable(null);
-        
-        // Function to show messages
-        self.showMessage = function(message) {
-            if (self.messageManager()) {
-                self.messageManager().addMessage(message);
-            } else {
-                // Fallback to console
-                console[message.severity === 'error' ? 'error' : 'log'](message.detail);
-            }
-        };
-        
-        // Called when ViewModel is disposed
-        self.dispose = function() {
-            // Cleanup computed observables
-            if (self.isValid && self.isValid.dispose) {
-                self.isValid.dispose();
-            }
-            if (self.validationMessage && self.validationMessage.dispose) {
-                self.validationMessage.dispose();
-            }
-            if (self.validationState && self.validationState.dispose) {
-                self.validationState.dispose();
-            }
-            if (self.showStatusIcon && self.showStatusIcon.dispose) {
-                self.showStatusIcon.dispose();
-            }
-            
-            oj.Logger.info("tncViewModel disposed");
-        };
     }
 
     return tncViewModel;

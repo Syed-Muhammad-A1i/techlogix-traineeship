@@ -27,9 +27,9 @@
   <div class="selected-options">
     <div class="options-list" data-bind="foreach: accountTypes">
       <div class="option" 
-           data-bind="css: { active: $parent.selectedAccountType() === id },
+           data-bind="css: { active: $parent.selectedAccountType() === name },
                       click: function(){ $parent.selectAccountType($data) }">
-        <img data-bind="attr: { src: ($parent.selectedAccountType() === id) ? selectedImage : defaultImage, alt: name }" class="option-img">
+        <img data-bind="attr: { src: ($parent.selectedAccountType() === name) ? selectedImage : defaultImage, alt: name }" class="option-img">
         <p data-bind="text: name"></p>
         </div>
       </div>

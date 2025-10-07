@@ -1,18 +1,12 @@
 /**
  * Username Step ViewModel for Oracle JET Account Opening Wizard
  */
-define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
     'use strict';
     
     function UsernameStepViewModel() {
         var self = this;
-        
-        // Observable for username
-        self.username = ko.observable("");
-        
-        // Observable for selected option (if needed for this step)
-        self.selectedOption = ko.observable('accountNumber');
-        
+                       
         // Next button click handler in your component
         self.nextButtonClick = function() {
           document.dispatchEvent(new CustomEvent('navigation', {
@@ -35,12 +29,6 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
           }));
         };
 
-
-        // Function to select option
-        self.selectOption = function(option) {
-            self.selectedOption(option);
-        };
-
         // Progress Steps Configuration
         self.steps = ko.observableArray([
             { number: 1, title: 'Account Type' },
@@ -50,6 +38,11 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
         ]);
 
         self.currentStep = ko.observable(4); // Current active step
+
+
+        //Component Functionality Start Here
+        // Observable for username
+        self.username = wizardState.username;
 
         // Username validation
         self.isValid = ko.computed(function() {

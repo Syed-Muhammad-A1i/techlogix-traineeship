@@ -1,7 +1,7 @@
 /**
  * Password Step ViewModel for Oracle JET Account Opening Wizard
  */
-define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
     'use strict';
     
     function PasswordStepViewModel() {
@@ -28,20 +28,7 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
             bubbles: true
           }));
         };
-        // Observable for selected option
-        self.selectedOption = ko.observable('accountNumber');
         
-        // Observable for account number
-        self.accountNumber = ko.observable('');
-        
-        // Observable for IBAN
-        self.iban = ko.observable('');
-        
-        // Function to select option
-        self.selectOption = function(option) {
-            self.selectedOption(option);
-        };
-
         // Progress Steps Configuration
         self.steps = ko.observableArray([
             { number: 1, title: 'Account Type' },
@@ -52,8 +39,10 @@ define(['ojs/ojcore', 'knockout', 'jquery'], function(oj, ko, $) {
 
         self.currentStep = ko.observable(4); // Current active step
 
+
+        //Component Functionality Start Here
         // Password observables
-        self.password = ko.observable('');
+        self.password = wizardState.password;
         self.confirmPassword = ko.observable('');
         
         // Show/Hide password observables
