@@ -1,0 +1,25 @@
+
+<div class="main-container">
+  <div class="checkmark-container">
+            <img  class="checkmark-icon" src="css/images/checkmark.svg" alt="Tick">
+        </div>
+        <h1>You have successfully<br>registered for online banking</h1>
+        <p>Following are the details of your registered online banking account.</p>
+
+        <div class="details-section">
+            <div class="detail-item">
+                USERNAME
+                <span data-bind="text: username"></span>
+            </div>
+            <div class="detail-item">
+                ACCOUNT TITLE
+                <span data-bind="text: accountTitle"></span>
+            </div>
+            <div class="detail-item">
+                ACCOUNT NUMBER
+                <span data-bind="text: accountNumber"></span>
+            </div>
+        </div>
+
+        <button class="continue-btn" data-bind="click: continueToLogin">Continue to Log In</button>
+    </div>
