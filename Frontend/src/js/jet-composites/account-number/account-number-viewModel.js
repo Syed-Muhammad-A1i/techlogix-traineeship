@@ -7,7 +7,10 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
     function AccountDetailsViewModel() {
         var self = this;
         
-      // Next button click handler in your component
+        // -------------------------
+        // Navigation handlers
+        // -------------------------
+        // Next button click handler in your component
         self.nextButtonClick = function() {
           document.dispatchEvent(new CustomEvent('navigation', {
             detail: {
@@ -28,7 +31,11 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             bubbles: true
           }));
         };
-        
+
+
+        // -------------------------
+        // Step tracking
+        // -------------------------
         // Progress Steps Configuration
         self.steps = ko.observableArray([
             { number: 1, title: 'Account Type' },
@@ -39,7 +46,10 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 
         self.currentStep = ko.observable(2); // Current active step
 
-        //Component Functionality Start Here
+        // -------------------------
+        // Shared State (wizardState)
+        // -------------------------
+
         // Observable for selected option
         self.accno = wizardState.accno;
         self.accountNumber = wizardState.accountNumber;
