@@ -4,10 +4,11 @@ define(['knockout'], function(ko) {
     cnic: ko.observable(''),
     accountType: ko.observable(''),
     accountNumber: ko.observable(''),
+    accno: ko.observable(''),
     iban: ko.observable(''),
     selectedOption: ko.observable('accountNumber'),
     username: ko.observable(''),
-    password: ko.observable(''),
+    // password: ko.observable(''),
     accountTitle: ko.observable(''), // New observable for account title
     phoneNumber: ko.observable('') // New observable for phone number
   };
@@ -18,10 +19,11 @@ define(['knockout'], function(ko) {
       cnic: wizardState.cnic(),
       accountType: wizardState.accountType(),
       accountNumber: wizardState.accountNumber(),
+      accno: wizardState.accno(),
       iban: wizardState.iban(),
       selectedOption: wizardState.selectedOption(),
       username: wizardState.username(),
-      password: wizardState.password(),
+      // password: wizardState.password(),
       accountTitle: wizardState.accountTitle(),
       phoneNumber: wizardState.phoneNumber()
     };
@@ -35,10 +37,11 @@ define(['knockout'], function(ko) {
       wizardState.cnic(parsed.cnic || '');
       wizardState.accountType(parsed.accountType || '');
       wizardState.accountNumber(parsed.accountNumber || '');
+      wizardState.accno(parsed.accno || '');
       wizardState.iban(parsed.iban || '');
       wizardState.selectedOption(parsed.selectedOption || 'accountNumber');
       wizardState.username(parsed.username || '');
-      wizardState.password(parsed.password || '');
+      // wizardState.password(parsed.password || '');
       wizardState.accountTitle(parsed.accountTitle || '');
       wizardState.phoneNumber(parsed.phoneNumber || '');
     }
@@ -49,10 +52,11 @@ define(['knockout'], function(ko) {
     wizardState.cnic('');
     wizardState.accountType('');
     wizardState.accountNumber('');
+    wizardState.accno('');
     wizardState.iban('');
     wizardState.selectedOption('accountNumber');
     wizardState.username('');
-    wizardState.password('');
+    // wizardState.password('');
     wizardState.accountTitle('');
     wizardState.phoneNumber('');
     sessionStorage.removeItem('wizardState');

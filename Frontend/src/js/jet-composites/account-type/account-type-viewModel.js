@@ -212,6 +212,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
         wizardState.accountTitle(data.accountTitle);
         wizardState.accountNumber(data.accountNumber);
         wizardState.username(data.phoneNumber);
+        wizardState.phoneNumber(data.phoneNumber);
 
         console.log("✅ Account Title:", wizardState.accountTitle());
         console.log("✅ Account Number:", wizardState.accountNumber());

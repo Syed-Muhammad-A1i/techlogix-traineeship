@@ -41,7 +41,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 
         //Component Functionality Start Here
         // Observable for selected option
-        self.accno = ko.observable('');
+        self.accno = wizardState.accno;
         self.accountNumber = wizardState.accountNumber;
         self.iban = wizardState.iban;
         self.selectedOption = wizardState.selectedOption;

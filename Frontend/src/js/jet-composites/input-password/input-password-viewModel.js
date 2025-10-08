@@ -42,7 +42,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 
         //Component Functionality Start Here
         // Password observables
-        self.password = wizardState.password;
+        self.password = ko.observable('');
         self.confirmPassword = ko.observable('');
         
         // Show/Hide password observables
