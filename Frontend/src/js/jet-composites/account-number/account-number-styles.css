@@ -66,12 +66,12 @@
     transform: translateY(-2px);
 }
 
-.option img {
+.options img {
     display: block;
     margin-bottom: 6px;
 }
 
-.option span, .option-label {
+.options span, .option-label {
     display: block;
     text-align: center;
 }
