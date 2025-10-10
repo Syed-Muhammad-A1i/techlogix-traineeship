@@ -148,9 +148,10 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
     };
 
     // -------------------------
-    // CNIC formatting
+    // CNIC formatting and validation
     // -------------------------
     self.cnicEdited = ko.observable(false);
+    self.isMatched = ko.observable(false); // For backend match result
 
     self.formattedCnicNumber = ko.computed({
       read: function () {
@@ -176,6 +177,35 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
       return /^\d{13}$/.test(wizardState.cnic());
     });
 
+    self.cnicErrorMessage = ko.observable("");
+    self.BackendcallDone = ko.observable(false);
+    // Event handler for dynamic validation
+    self.onCnicInputChange = function () {
+      self.cnicEdited(true);
+      self.BackendcallDone(false);
+      // Reset match state when user types again
+      if (!self.isCnicValid()) {
+        self.isMatched(false);
+        self.cnicErrorMessage("❌ Invalid CNIC format");
+      } else {
+        self.cnicErrorMessage("");
+      }
+    };
+
+    // -------------------------
+    // CNIC Input Class (Dynamic border color)
+    // -------------------------
+    self.cnicInputClass = ko.computed(function () {
+      if (!self.cnicEdited()) return 'default';
+
+      if (!self.isCnicValid()) return 'invalid';
+
+      if (!self.BackendcallDone()) return 'default'; // If not checked yet, but valid format
+
+      // If CNIC valid but not matched (after backend fetch)
+      return self.isMatched() ? 'valid' : 'invalid';
+    });
+
     // -------------------------
     // Backend CNIC check
     // -------------------------
@@ -184,23 +214,29 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
 
     self.checkCnicInBackend = async function () {
       const cnic = self.cnicNumberRaw();
+
       if (!self.isCnicValid()) {
-        alert("⚠️ Please enter a valid 13-digit CNIC.");
+        self.cnicErrorMessage("❌ Invalid CNIC format");
+        self.isMatched(false);
         return false;
       }
 
       try {
         self.isChecking(true);
         self.errorMessage("");
+        self.cnicErrorMessage("");
 
-        const response = await fetch(`http://localhost:8080/api/accounts/${cnic}`);
+        const response = await fetch(`http://localhost:8081/api/accounts/${cnic}`);
+
         if (!response.ok) {
           if (response.status === 404) {
-            self.errorMessage("CNIC not found in database.");
-            alert("❌ CNIC not found in our records.");
+            self.cnicErrorMessage("❌ CNIC not found in our records");
+            self.isMatched(false);
+            // self.BackendcallDone(true);
             return false;
           } else {
-            alert("⚠️ Server error while checking CNIC.");
+            self.cnicErrorMessage("⚠️ Server error. Please try again later.");
+            self.isMatched(false);
             return false;
           }
         }
@@ -208,27 +244,31 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
         const data = await response.json();
         console.log("✅ Account found:", data);
 
-        // Save account details into wizardState for later pages
+        // Save fetched data in wizardState
         wizardState.accountTitle(data.accountTitle);
         wizardState.accountNumber(data.accountNumber);
         wizardState.username(data.phoneNumber);
         wizardState.phoneNumber(data.phoneNumber);
 
-        console.log("✅ Account Title:", wizardState.accountTitle());
-        console.log("✅ Account Number:", wizardState.accountNumber());
-        console.log("✅ Phone Number:", wizardState.phoneNumber());
-
+        // CNIC matched successfully
+        self.isMatched(true);
+        self.cnicErrorMessage(""); // clear error
+        // self.BackendcallDone(true);
         return true;
 
       } catch (error) {
         console.error("Error checking CNIC:", error);
-        alert("⚠️ Network or server issue. Try again.");
+        self.cnicErrorMessage("⚠️ Network or server issue. Try again.");
+        self.isMatched(false);
+        self.BackendcallDone(false);
         return false;
 
       } finally {
         self.isChecking(false);
+        self.BackendcallDone(true);
       }
     };
+
 
     // -------------------------
     // Navigation actions

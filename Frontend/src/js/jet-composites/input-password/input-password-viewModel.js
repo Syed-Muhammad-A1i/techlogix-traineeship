@@ -160,7 +160,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             const accountNumber = wizardState.accountNumber();
 
             try {
-                const response = await fetch(`http://localhost:8080/api/accounts/${accountNumber}`, {
+                const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

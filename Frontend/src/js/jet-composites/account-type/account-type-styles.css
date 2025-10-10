@@ -8,9 +8,8 @@
     margin-top: 0;
 }
 
-
 .content {
-    padding: 30px;
+    padding: 2px 30px 20px 30px;
     text-align: left;
 }
 
@@ -25,14 +24,14 @@
 .selected-options {
     /* background-color: #f9f9f9; */
     border-radius: 0px;
-    padding: 15px;
-    margin-bottom: 25px;
+    padding: 5px;
+    margin-bottom: 15px;
 }
 
 .options-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 0px;
 }
 .option {
     background-color: #ffffff;
@@ -46,6 +45,19 @@
     color: #413e3e9d;
     width: 20%;
 }
+
+.cnic-input.valid {
+  border: 2px solid #28a745; /* green */
+}
+
+.cnic-input.invalid {
+  border: 2px solid #dc3545; /* red */
+}
+
+.cnic-input.default {
+  border: 1px solid #ccc;
+}
+
 .option.active {
   border-bottom: 3px solid #6a1b9a;
   color: #6a1b9a;

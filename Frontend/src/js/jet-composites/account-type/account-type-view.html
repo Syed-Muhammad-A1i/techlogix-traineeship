@@ -38,13 +38,19 @@
   <div class="cnic-section">
     <h3 class="cnic-title">CNIC Number</h3><br>
     <input type="text" class="cnic-input" 
-           placeholder="XXXXX-XXXXXXX-X"
-           maxlength="15" 
-           data-bind="value: formattedCnicNumber, valueUpdate: 'input'">
+       placeholder="XXXXX-XXXXXXX-X"
+       maxlength="15"
+       data-bind="value: formattedCnicNumber, 
+                  valueUpdate: 'input', 
+                  css: cnicInputClass,
+                  event: { input: onCnicInputChange }"> <!-- Use KO.subscribe()  -->
+
 
     <div class="cnic-number">Please enter your 13-digit CNIC Number</div>
-    <p class="error" data-bind="visible: cnicEdited() && !isCnicValid()">❌ Invalid</p>
-    <p class="valid" data-bind="visible: cnicEdited() && isCnicValid()">✅ Valid</p>
+    <p class="error" data-bind="visible: cnicEdited() && !isCnicValid()">❌ CNIC must be 13 digits</p>
+    <p class="error" data-bind="visible: cnicEdited() && BackendcallDone()">❌ CNIC not found</p>
+    <!-- <p class="valid" data-bind="visible: cnicEdited() && isCnicValid() ">✅ Valid Entry</p> -->
+
   </div>
   
   <div class="buttons">

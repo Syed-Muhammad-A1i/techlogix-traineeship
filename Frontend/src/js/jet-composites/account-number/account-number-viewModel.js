@@ -99,18 +99,47 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         });
         
         // Validation state for UI styling
-        self.validationState = ko.computed(function() {
+        // Flag for live checking
+        self.isMatched = ko.observable(false);
+
+        // Triggered when user types
+        self.onAccInputChange = function () {
+            self.accEdited(true);
+
+            // Check if valid format first
+            if (self.isAccNoValid()) {
+                // Compare with actual account number
+                if (self.accno() === self.accountNumber()) {
+                    self.isMatched(true);
+                } else {
+                    self.isMatched(false);
+                }
+            } else {
+                self.isMatched(false);
+            }
+        };
+
+        // Dynamic input class based on validation and match
+        self.accInputClass = ko.computed(function () {
             if (!self.accEdited()) {
                 return 'default';
             }
-            return self.isAccNoValid() ? 'valid' : 'invalid';
+
+            if (!self.isAccNoValid()) {
+                return 'invalid';
+            }
+
+            // If valid format, check match
+            return self.isMatched() ? 'valid' : 'invalid';
         });
+
 
         // Previous Step function
         self.previousStep = function () {
             self.backButtonClick();
         };
-
+        
+        self.cnicErrorMessage = ko.observable("");
         // Next Step function with validation
         self.nextStep = function () {
             self.accEdited(true);
@@ -127,7 +156,8 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
                 oj.Logger.info("Proceeding with Account Number: " + self.formattedAccountNumber());
             } else {
                 // Update the shared state
-                alert("✅ Account Number Not Matched!");
+                self.cnicErrorMessage("❌ Account Number Not Matched");
+                // alert("✅ Account Number Not Matched!");
             }
         };
         

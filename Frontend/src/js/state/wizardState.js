@@ -2,7 +2,7 @@ define(['knockout'], function(ko) {
   // Shared observables that all pages can read/write
   const wizardState = {
     cnic: ko.observable(''),
-    accountType: ko.observable(''),
+    accountType: ko.observable('Individual'),
     accountNumber: ko.observable(''),
     accno: ko.observable(''),
     iban: ko.observable(''),

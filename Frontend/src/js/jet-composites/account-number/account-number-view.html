@@ -39,14 +39,19 @@
       <div class="input-group">
         <h3 class="acc-title">Account Number</h3><br>
         <input type="text" class="acc-input" 
-                placeholder="XXXXXXXXXXXXXX"
-                maxlength="14" 
-                data-bind="value: formattedAccountNumber, valueUpdate: 'input'">
+            placeholder="XXXXXXXXXXXXXX"
+            maxlength="14" 
+            data-bind="value: formattedAccountNumber, 
+                        valueUpdate: 'input',
+                        css: accInputClass,
+                        event: { input: onAccInputChange }">
+
 
         <div class="acc-number">Please enter your 14-digit Account Number</div>
-          <p class="error" data-bind="visible: accEdited() && !isAccNoValid()">❌ Account Number must be like 89***-*********1</p>
-          <p class="valid" data-bind="visible: accEdited() && isAccNoValid()">✅ Account Number Valid</p>
-      </div>
+          <p class="error" data-bind="visible: accEdited() && !isAccNoValid()">❌ Account Number must be 14 digits</p>
+          <p class="error" data-bind="visible: accEdited() && isAccNoValid() && !isMatched()">❌ Account Number Not Matched</p>
+          <p class="valid" data-bind="visible: accEdited() && isAccNoValid() && isMatched()">✅ Account Number Matched</p>
+        </div>
     </div>
 
 
@@ -77,6 +82,6 @@
       </p>
     </div>
   </div>
- </div>
+</div>
 <p class="login-prompt">If you have registered already, please <a href="#" class="login-link">Login</a></p>
       
