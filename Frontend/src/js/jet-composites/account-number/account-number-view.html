@@ -44,12 +44,12 @@
             data-bind="value: formattedAccountNumber, 
                         valueUpdate: 'input',
                         css: accInputClass,
-                        event: { input: onAccInputChange }">
+                        "> 
 
 
         <div class="acc-number">Please enter your 14-digit Account Number</div>
           <p class="error" data-bind="visible: accEdited() && !isAccNoValid()">❌ Account Number must be 14 digits</p>
-          <p class="error" data-bind="visible: accEdited() && isAccNoValid() && !isMatched()">❌ Account Number Not Matched</p>
+          <p class="error" data-bind="visible: accEdited() && isAccNoValid() && backendcall()">❌ Account Number Not Matched</p>
           <p class="valid" data-bind="visible: accEdited() && isAccNoValid() && isMatched()">✅ Account Number Matched</p>
         </div>
     </div>

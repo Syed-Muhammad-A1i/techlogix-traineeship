@@ -70,18 +70,25 @@ public class AccountController {
 
     // Get: Verify CNIC & Account Number
     @GetMapping("/verify")
-    public ResponseEntity<ApiResponse<?>> verifyAccount(@RequestBody Map<String, String> body) {
-
-        String cnic = body.get("cnic");
-        String accountNumber = body.get("accountNumber");
+    public ResponseEntity<ApiResponse<?>> verifyAccount(    
+        @RequestParam String cnic,
+        @RequestParam String accountNumber) {
+//
+//        String cnic = body.get("cnic");
+//        String accountNumber = body.get("accountNumber");
 
         Account account = accountService.verifyAccountForCnic(cnic, accountNumber);
 
-        ApiResponse<Account> response = new ApiResponse<>(
-                HttpStatus.OK.value(),
-                "Account found successfully",
-                account
+        Map<String, String> data = Map.of(
+                "accountTitle", account.getAccountTitle(),
+                "phoneNumber", account.getPhoneNumber()
         );
+
+        ApiResponse<Map<String, String>> response = ApiResponse.<Map<String, String>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Account verified successfully")
+                .data(data)
+                .build();
 
         return ResponseEntity.ok(response);
     }

@@ -42,14 +42,15 @@
        maxlength="15"
        data-bind="value: formattedCnicNumber, 
                   valueUpdate: 'input', 
-                  css: cnicInputClass,
-                  event: { input: onCnicInputChange }"> <!-- Use KO.subscribe()  -->
+                  css: cnicInputClass"> <!-- Use KO.subscribe()  -->
 
 
     <div class="cnic-number">Please enter your 13-digit CNIC Number</div>
+    <!-- <p class="error" data-bind="text: cnicErrorMessage, visible: cnicErrorMessage()"></p> -->
+
     <p class="error" data-bind="visible: cnicEdited() && !isCnicValid()">❌ CNIC must be 13 digits</p>
-    <p class="error" data-bind="visible: cnicEdited() && BackendcallDone()">❌ CNIC not found</p>
-    <!-- <p class="valid" data-bind="visible: cnicEdited() && isCnicValid() ">✅ Valid Entry</p> -->
+    <p class="error" data-bind="visible: cnicEdited() && BackendcallDone()">❌ CNIC not found</p> 
+    <p class="valid" data-bind="visible: cnicEdited() && isCnicValid() && !BackendcallDone()">✅ Valid Entry</p>
 
   </div>
   
