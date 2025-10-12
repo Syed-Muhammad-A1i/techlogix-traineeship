@@ -5,10 +5,12 @@ import com.example.onboarding.model.User;
 import com.example.onboarding.repository.AccountRepository;
 import com.example.onboarding.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -25,45 +27,53 @@ public class AccountService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<Account> getAccountByCnic(String cnic) {
-        return accountRepository.findByCnic(cnic);
+    // Get account by CNIC
+    public void checkCnicExists(String cnic) {
+        boolean exists = accountRepository.findByCnic(cnic).isPresent();
+        if (!exists) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CNIC not found");
+        }
+        // No return needed, just passes if CNIC exists
     }
 
-
+    // Create new account
     public Account createAccount(Account account) {
-        return accountRepository.save(account);
+        try {
+            return accountRepository.save(account);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create account");
+        }
     }
 
-    public Account updateLoginDetails(String account_number, String username, String password, String Phone_number) {
-        Account account = accountRepository.findByAccountNumber(account_number)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+    // Update login details
+    public Account updateLoginDetails(String accountNumber, String username, String password, String phoneNumber) {
+        if (username == null || password == null || phoneNumber == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username, password, and phone number are required");
+        }
+
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
         User user = account.getUser();
         if (user == null) {
             user = new User();
             user.setAccount(account);
         }
+
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setPhone_number(Phone_number);
+        user.setPhoneNumber(phoneNumber);
 
         userRepository.save(user);
         return account;
     }
 
-
-    public boolean verifyAccountForCnic(String cnic, String accountNumber) {
-        // Find account by CNIC
-        Optional<Account> accountOpt = accountRepository.findByCnic(cnic);
-
-        if (accountOpt.isEmpty()) {
-            return false; // CNIC not found
-        }
-
-        Account account = accountOpt.get();
-
-        // Check if account number matches
-        return account.getAccountNumber().equals(accountNumber);
+    // Verify CNIC and Account Number
+    public Account verifyAccountForCnic(String cnic, String accountNumber) {
+        return accountRepository.findByCnicAndAccountNumber(cnic, accountNumber)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "No account found for CNIC: " + cnic + " and Account Number: " + accountNumber
+                ));
     }
-
 }
