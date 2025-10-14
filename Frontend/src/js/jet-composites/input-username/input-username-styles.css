@@ -59,9 +59,9 @@
     transform: translateY(-2px);
 }
 
-.container {
+/* .container {
     position: relative;
-}
+} */
 
 .login-link {
     color: #ffffff;
@@ -112,7 +112,7 @@
         padding: 20px;
     }
 }
-
+/* 
 .progress-steps {
     background-color: white;
     padding: 20px;
@@ -200,9 +200,9 @@
 .step-connector.completed {
     background-color: #25973e;
 }
-
+ */
 /* Responsive adjustments */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .step-container {
         gap: 10px;
     }
@@ -221,7 +221,7 @@
     .step-label {
         font-size: 10px;
     }
-}
+} */
 
 .input-container {
   position: relative;
@@ -342,4 +342,80 @@ li::marker {
     color: #7d4b87;
     font-size: 20px;
     font-weight: bold;
+}
+
+/* Status Icons */
+.status-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #ccc;
+  border-top: 3px solid #6a1b9a;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status Messages */
+.status-message {
+  font-size: 14px;
+  margin-top: 6px;
+  transition: color 0.3s ease;
+}
+
+.status-message.valid {
+    /* border: 2px solid #28a745;  */
+  color: #4caf50;
+}
+
+.status-message.invalid {
+    /* border: 2px solid #dc3545; */
+  color: #f44336;
+}
+
+.status-message {
+  color: #28a745;
+  font-size: 14px;
+}
+
+.error-message {
+  color: #dc3545;
+  font-size: 14px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 40px 12px 10px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: border-color 0.3s ease;
+}
+
+.input-container.default .form-input {
+  border-color: #ccc;
+}
+
+.input-container.valid .form-input {
+  border-color: #4caf50;
+}
+
+.input-container.invalid .form-input {
+  border-color: #f44336;
 }

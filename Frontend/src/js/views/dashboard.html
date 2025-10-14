@@ -1,68 +1,54 @@
-<!-- <oj-bind-if test="[[ currentPage() === 'page1' ]]">
-  <account-type 
-    next-callback="[[nextPage]]">
-  </account-type>
-</oj-bind-if>
+<div class="container">
+  <div class="progress-steps" data-bind="visible: currentPage() < 6">
 
-<oj-bind-if test="[[ currentPage() === 'page2' ]]">
-  <account-number 
-    next-callback="[[nextPage]]" 
-    back-callback="[[previousPage]]">
-  </account-number>
-</oj-bind-if>
+      <div class="step-container" data-bind="foreach: steps">
+        <div class="step-item">
+          <div class="step-circle" data-bind="css: { 
+            'active': $parent.currentStep() === number, 
+            'completed': $parent.currentStep() > number,
+            'upcoming': $parent.currentStep() < number
+          }">
+            <span data-bind="text: number"></span>
+          </div>
+          <span class="step-label" data-bind="text: title, css: { 
+            'active': $parent.currentStep() === number,
+            'completed': $parent.currentStep() > number,
+            'upcoming': $parent.currentStep() < number
+          }"></span>
+        </div>
+        <!-- ko if: $index() < $parent.steps().length - 1 -->
+        <div class="step-connector" data-bind="css: { 'completed': $parent.currentStep() > number }"></div>
+        <!-- /ko -->
+      </div>
+  </div>
 
-<oj-bind-if test="[[ currentPage() === 'page3' ]]">
-  <input-username 
-    next-callback="[[nextPage]]" 
-    back-callback="[[previousPage]]">
-  </input-username>
-</oj-bind-if>
+    <oj-bind-if test="[[ currentPage() === 1 ]]">
+      <account-type></account-type>
+    </oj-bind-if>
 
-<oj-bind-if test="[[ currentPage() === 'page4' ]]">
-  <input-password 
-    next-callback="[[nextPage]]" 
-    back-callback="[[previousPage]]">
-  </input-password>
-</oj-bind-if>
 
-<oj-bind-if test="[[ currentPage() === 'page5' ]]">
-  <terms-conditions 
-    next-callback="[[nextPage]]" 
-    back-callback="[[previousPage]]">
-  </terms-conditions>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page6' ]]">
-  <user-confirmation 
-    back-callback="[[previousPage]]">
-  </user-confirmation>
-</oj-bind-if> -->
-
-<oj-bind-if test="[[ currentPage() === 'page1' ]]">
-  <account-type></account-type>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page2' ]]">
-  <account-number>
-  </account-number>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page3' ]]">
-  <input-username></input-username>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page4' ]]">
-  <input-password></input-password>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page5' ]]">
-  <terms-conditions></terms-conditions>
-</oj-bind-if>
-
-<oj-bind-if test="[[ currentPage() === 'page6' ]]">
+    <oj-bind-if test="[[ currentPage() === 2 ]]">
+      <account-number>
+      </account-number>
+    </oj-bind-if>
+    
+    <oj-bind-if test="[[ currentPage() === 3 ]]">
+      <input-username></input-username>
+    </oj-bind-if>
+    
+    <oj-bind-if test="[[ currentPage() === 4 ]]">
+      <input-password></input-password>
+    </oj-bind-if>
+    
+    <oj-bind-if test="[[ currentPage() === 5 ]]">
+      <terms-conditions></terms-conditions>
+    </oj-bind-if>
+  </div>
+    
+<oj-bind-if test="[[ currentPage() === 6 ]]">
   <user-confirmation></user-confirmation>
 </oj-bind-if>
 
-<oj-bind-if test="[[ currentPage() === 'page7' ]]">
+<oj-bind-if test="[[ currentPage() === 7 ]]">
   <login-page></login-page>
 </oj-bind-if>

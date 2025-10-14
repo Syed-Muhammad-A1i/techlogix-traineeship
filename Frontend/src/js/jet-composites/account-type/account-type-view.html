@@ -1,26 +1,3 @@
-<div class="container">
-<div class="progress-steps">
-      <div class="step-container" data-bind="foreach: steps">
-        <div class="step-item">
-          <div class="step-circle" data-bind="css: { 
-            'active': $parent.currentStep() === number, 
-            'completed': $parent.currentStep() > number,
-            'upcoming': $parent.currentStep() < number
-          }">
-            <span data-bind="text: number"></span>
-          </div>
-          <span class="step-label" data-bind="text: title, css: { 
-            'active': $parent.currentStep() === number,
-            'completed': $parent.currentStep() > number,
-            'upcoming': $parent.currentStep() < number
-          }"></span>
-        </div>
-        <!-- ko if: $index() < $parent.steps().length - 1 -->
-        <div class="step-connector" data-bind="css: { 'completed': $parent.currentStep() > number }"></div>
-        <!-- /ko -->
-      </div>
-    </div>
-
 <div class="content">
   <h2 class="section-title">Select Account Type</h2>
 
@@ -35,24 +12,30 @@
       </div>
     </div>
 
-  <div class="cnic-section">
-    <h3 class="cnic-title">CNIC Number</h3><br>
-    <input type="text" class="cnic-input" 
-       placeholder="XXXXX-XXXXXXX-X"
-       maxlength="15"
-       data-bind="value: formattedCnicNumber, 
-                  valueUpdate: 'input', 
-                  css: cnicInputClass"> <!-- Use KO.subscribe()  -->
+ <div class="cnic-section">
+  <h3 class="cnic-title" data-bind="text: selectedAccountType() === 'Foreign National' ? 'Foreign National' : 'CNIC Number'"></h3><br>
 
+  <!-- ko if: selectedAccountType() === 'Foreign National' -->
+    <div class="foreign-text">
+      <p class="info-text">Foreign National Screen</p>
+    </div>
+  <!-- /ko -->
+
+  <!-- ko if: selectedAccountType() !== 'Foreign National' -->
+    <input type="text" class="cnic-input" 
+      placeholder="XXXXX-XXXXXXX-X"
+      maxlength="15"
+      data-bind="value: formattedCnicNumber, 
+                valueUpdate: 'input', 
+                css: cnicInputClass">
 
     <div class="cnic-number">Please enter your 13-digit CNIC Number</div>
-    <!-- <p class="error" data-bind="text: cnicErrorMessage, visible: cnicErrorMessage()"></p> -->
-
     <p class="error" data-bind="visible: cnicEdited() && !isCnicValid()">❌ CNIC must be 13 digits</p>
     <p class="error" data-bind="visible: cnicEdited() && BackendcallDone()">❌ CNIC not found</p> 
     <p class="valid" data-bind="visible: cnicEdited() && isCnicValid() && !BackendcallDone()">✅ Valid Entry</p>
-
+  <!-- /ko -->
   </div>
+
   
   <div class="buttons">
         <button class="btn btn-back" data-bind="click: previousStep">Back</button>
@@ -70,5 +53,3 @@
         </p>
       </div>
 </div>
-</div>
-<p class="login-prompt">If you have registered already, please <a href="#" class="login-link">Login</a></p>

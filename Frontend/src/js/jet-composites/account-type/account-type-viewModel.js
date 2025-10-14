@@ -7,29 +7,29 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
     // -------------------------
     self.nextButtonClick = function () {
       document.dispatchEvent(new CustomEvent('navigation', {
-        detail: { action: 'next', from: 'page1' },
+        detail: { action: 'next', from: 1 },
         bubbles: true
       }));
     };
 
     self.backButtonClick = function () {
       document.dispatchEvent(new CustomEvent('navigation', {
-        detail: { action: 'previous', from: 'page1' },
+        detail: { action: 'previous', from: 1 },
         bubbles: true
       }));
     };
 
     // -------------------------
     // Step tracking
-    // -------------------------
-    self.steps = ko.observableArray([
-      { number: 1, title: 'Account Type' },
-      { number: 2, title: 'Account Details' },
-      { number: 3, title: 'Verification' },
-      { number: 4, title: 'Login Details' }
-    ]);
-    self.currentStep = ko.observable(1);
-
+    // // -------------------------
+    // self.steps = ko.observableArray([
+    //   { number: 1, title: 'Account Type' },
+    //   { number: 2, title: 'Account Details' },
+    //   { number: 3, title: 'Verification' },
+    //   { number: 4, title: 'Login Details' }
+    // ]);
+    // self.currentStep = ko.observable(1);
+    wizardState.currentStep(1); // Ensure wizardState is synced
     // -------------------------
     // Shared State (wizardState)
     // -------------------------

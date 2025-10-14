@@ -70,7 +70,7 @@ public class AccountController {
 
     // Get: Verify CNIC & Account Number
     @GetMapping("/verify")
-    public ResponseEntity<ApiResponse<?>> verifyAccount(    
+    public ResponseEntity<ApiResponse<?>> verifyAccount(
         @RequestParam String cnic,
         @RequestParam String accountNumber) {
 //

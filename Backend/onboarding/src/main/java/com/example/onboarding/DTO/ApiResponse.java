@@ -13,4 +13,5 @@ public class ApiResponse<T> {
     private int statusCode;   // e.g. 200, 404
     private String message;   // human-readable message
     private T data;           // response payload
+    //success boolean
 }

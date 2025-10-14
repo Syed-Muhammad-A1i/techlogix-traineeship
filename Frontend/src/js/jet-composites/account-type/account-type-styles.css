@@ -1,12 +1,12 @@
-.container {
+/* .container {
     background-color: white;
     border-radius: 20px 20px 20px 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    width: 170%; /* Increased from 150% */
-    max-width: 900px; /* Increased from 800px */
+    width: 170%; /* Increased from 150% 
+    max-width: 900px; /* Increased from 800px 
     overflow: hidden;
     margin-top: 0;
-}
+} */
 
 .content {
     padding: 2px 30px 20px 30px;
@@ -167,10 +167,10 @@ option.active {
     width: 260px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-
+/* 
 .container {
     position: relative;
-}
+} */
 
 .publisher-title {
     font-size: 12px;
@@ -212,6 +212,23 @@ option.active {
     display: block;
 }
 
+.foreign-text {
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+  width: 35%;
+  font-weight: bolder;
+}
+
+.info-text {
+  font-size: 16px;
+  font-weight: bolder;
+  color: #7d4b87;
+}
+
+
 @media (max-width: 600px) {
     /* .progress-steps {
         flex-direction: flex;
@@ -244,7 +261,7 @@ option.active {
     }
 }
 
-.progress-steps {
+/* .progress-steps {
     background-color: white;
     padding: 20px;
     border-radius: 0;
@@ -330,10 +347,10 @@ option.active {
 
 .step-connector.completed {
     background-color: #25973e;
-}
+} */
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .step-container {
         gap: 10px;
     }
@@ -352,4 +369,4 @@ option.active {
     .step-label {
         font-size: 10px;
     }
-}
+} */

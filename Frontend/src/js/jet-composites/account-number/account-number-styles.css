@@ -1,13 +1,13 @@
-
+/* 
 .container {
     background-color: white;
     border-radius: 20px 20px 20px 20px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    width: 170%; /* Increased from 150% */
-    max-width: 900px; /* Increased from 800px */
+    width: 170%; /* Increased from 150% 
+    max-width: 900px; /* Increased from 800px 
     overflow: hidden;
     margin-top: 0;
-}
+} */
 
 
 .content {
@@ -187,9 +187,9 @@ border: 1px solid #ccc;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.container {
+/* .container {
     position: relative;
-}
+} */
 
 .publisher-title {
     font-size: 12px;
@@ -263,7 +263,7 @@ border: 1px solid #ccc;
         padding: 20px;
     }
 }
-
+/* 
 .progress-steps {
     background-color: white;
     padding: 20px;
@@ -350,10 +350,10 @@ border: 1px solid #ccc;
 
 .step-connector.completed {
     background-color: #25973e;
-}
+} */
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .step-container {
         gap: 10px;
     }
@@ -390,4 +390,4 @@ border: 1px solid #ccc;
         margin-bottom: 15px;
     }
 
-}
+} */

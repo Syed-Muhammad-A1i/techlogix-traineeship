@@ -1,4 +1,5 @@
 define(['knockout', 
+  'state/wizardState',
   '../jet-composites/account-type/loader', 
   '../jet-composites/account-number/loader', 
   '../jet-composites/input-username/loader', 
@@ -6,22 +7,27 @@ define(['knockout',
   '../jet-composites/terms-conditions/loader',
   '../jet-composites/user-confirmation/loader',
   '../jet-composites/login-page/loader'
-], function(ko) {
+  
+], function(ko, wizardState) {
   function AppControllerViewModel() {
     var self = this;
 
-    // Current visible page
-    self.currentPage = ko.observable('page1');
+    // -------------------------
+    // Step tracking
+    // -------------------------
+    self.steps = ko.observableArray([
+      { number: 1, title: 'Account Type' },
+      { number: 2, title: 'Account Details' },
+      { number: 3, title: 'Verification' },
+      { number: 4, title: 'Login Details' }
+    ]);
 
-    // Shared state across components
-    self.sharedState = {
-      accountNumber: ko.observable('Ali'),
-      iban: ko.observable(''),
-      selectedOption: ko.observable('accountNumber')
-    };
-    
+    // Current visible page
+    self.currentStep = wizardState.currentStep; // Start at step 1;
+
+    self.currentPage = ko.observable(1); // Start at page1
     // Define page order
-    self.pageOrder = ['page1', 'page2', 'page3', 'page4', 'page5', 'page6', 'page7'];
+    self.pageOrder = [1, 2, 3, 4, 5, 6, 7];
     
     // Go directly to page
     self.goToPage = function(page) {

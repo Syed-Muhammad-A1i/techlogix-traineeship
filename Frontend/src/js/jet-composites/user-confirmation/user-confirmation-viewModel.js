@@ -22,7 +22,7 @@ define(
           document.dispatchEvent(new CustomEvent('navigation', {
             detail: {
               action: 'next',
-              from: 'page6'
+              from: 6
             },
             bubbles: true  // This ensures the event bubbles up
           }));

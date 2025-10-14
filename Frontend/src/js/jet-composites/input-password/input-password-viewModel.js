@@ -12,7 +12,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
           document.dispatchEvent(new CustomEvent('navigation', {
             detail: {
               action: 'next',
-              from: 'page4'
+              from: 4
             },
             bubbles: true  // This ensures the event bubbles up
           }));
@@ -23,22 +23,22 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
           document.dispatchEvent(new CustomEvent('navigation', {
             detail: {
               action: 'previous', 
-              from: 'page4'
+              from: 4
             },
             bubbles: true
           }));
         };
         
         // Progress Steps Configuration
-        self.steps = ko.observableArray([
-            { number: 1, title: 'Account Type' },
-            { number: 2, title: 'Account Details' },
-            { number: 3, title: 'Verification' },
-            { number: 4, title: 'Login Details' }
-        ]);
+        // self.steps = ko.observableArray([
+        //     { number: 1, title: 'Account Type' },
+        //     { number: 2, title: 'Account Details' },
+        //     { number: 3, title: 'Verification' },
+        //     { number: 4, title: 'Login Details' }
+        // ]);
 
-        self.currentStep = ko.observable(4); // Current active step
-
+        // self.currentStep = ko.observable(4); // Current active step
+        wizardState.currentStep(4); // Ensure wizardState is synced
 
         //Component Functionality Start Here
         // Password observables
@@ -150,41 +150,42 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
                 alert("⚠️ Please ensure passwords match.");
                 return;
             }
-            // Prepare data for backend
-            const payload = {
-                username: wizardState.username(),
-                password: self.password(),
-                phone_number: wizardState.phoneNumber()
-            };
+            // // Prepare data for backend
+            // const payload = {
+            //     username: wizardState.username(),
+            //     password: self.password(),
+            //     phone_number: wizardState.phoneNumber()
+            // };
 
-            const accountNumber = wizardState.accountNumber();
+            // const accountNumber = wizardState.accountNumber();
 
-            try {
-                const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
+            // try {
+            //     const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json"
+            //         },
+            //         body: JSON.stringify(payload)
+            //     });
 
-                if (!response.ok) {
-                    throw new Error("❌ Failed to update login details");
-                }
+            //     if (!response.ok) {
+            //         throw new Error("❌ Failed to update login details");
+            //     }
 
-                const result = await response.json();
-                console.log("✅ Login details updated:", result);
+            //     const result = await response.json();
+            //     console.log("✅ Login details updated:", result);
 
-                alert("✅ Account setup completed successfully!");
-                self.nextButtonClick();
+            //     alert("✅ Account setup completed successfully!");
+            //     self.nextButtonClick();
 
-            } catch (error) {
-                console.error("Error saving login details:", error);
-                alert("⚠️ Unable to save details. Please try again.");
-            }
+            // } catch (error) {
+            //     console.error("Error saving login details:", error);
+            //     alert("⚠️ Unable to save details. Please try again.");
+            // }
             
+            wizardState.password(self.password());
             // If validation passes, go to next step
-            // self.nextButtonClick();
+            self.nextButtonClick();
             // alert("✅ Proceeding to next step!");
         };
 
@@ -227,14 +228,14 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 //         // Navigation events
 //         self.nextButtonClick = function() {
 //             document.dispatchEvent(new CustomEvent('navigation', {
-//                 detail: { action: 'next', from: 'page4' },
+//                 detail: { action: 'next', from: 4 },
 //                 bubbles: true
 //             }));
 //         };
 
 //         self.backButtonClick = function() {
 //             document.dispatchEvent(new CustomEvent('navigation', {
-//                 detail: { action: 'previous', from: 'page4' },
+//                 detail: { action: 'previous', from: 4 },
 //                 bubbles: true
 //             }));
 //         };

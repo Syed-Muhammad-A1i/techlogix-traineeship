@@ -1,177 +1,115 @@
-/**
- * Username Step ViewModel for Oracle JET Account Opening Wizard
- */
-define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
-    'use strict';
-    
-    function UsernameStepViewModel() {
-        var self = this;
-                       
-        // Next button click handler in your component
-        self.nextButtonClick = function() {
-          document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'next',
-              from: 'page3'
-            },
-            bubbles: true  // This ensures the event bubbles up
-          }));
-        };
+define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizardState) {
+  'use strict';
 
-        // Back button click handler in your component
-        self.backButtonClick = function() {
-          document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'previous', 
-              from: 'page3'
-            },
-            bubbles: true
-          }));
-        };
+  function UsernameStepViewModel() {
+    var self = this;
 
-        // Progress Steps Configuration
-        self.steps = ko.observableArray([
-            { number: 1, title: 'Account Type' },
-            { number: 2, title: 'Account Details' },
-            { number: 3, title: 'Verification' },
-            { number: 4, title: 'Login Details' }
-        ]);
+    // -------------------------
+    // Navigation Handlers
+    // -------------------------
+    self.nextButtonClick = function () {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: { action: 'next', from: 3 },
+        bubbles: true,
+      }));
+    };
 
-        self.currentStep = ko.observable(4); // Current active step
+    self.backButtonClick = function () {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: { action: 'previous', from: 3 },
+        bubbles: true,
+      }));
+    };
 
+    wizardState.currentStep(4);
 
-        //Component Functionality Start Here
-        // Observable for username
-        self.username = wizardState.username;
+    // -------------------------
+    // Observables
+    // -------------------------
+    self.username = wizardState.username;
+    self.isAvailable = ko.observable(false);
+    self.isChecking = ko.observable(false);
+    self.errorMessage = ko.observable('');
+    self.successMessage = ko.observable('');
+    self.backendDone = ko.observable(false);
 
-        // Username validation
-        self.isValid = ko.computed(function() {
-            return self.username().length >= 8 && self.username().length <= 16;
-        });
-        
-        // Username validation message
-        self.validationMessage = ko.computed(function() {
-            if (self.username().length === 0) {
-                return 'Please enter a username';
-            } else if (self.username().length < 8) {
-                return 'Username must be at least 8 characters';
-            } else if (self.username().length > 16) {
-                return 'Username cannot exceed 16 characters';
+    // -------------------------
+    // Debounced Backend Validation
+    // -------------------------
+    let debounceTimer = null;
+
+    self.username.subscribe(function (newUsername) {
+      self.backendDone(false);
+      self.isAvailable(false);
+      self.errorMessage('');
+      self.successMessage('');
+
+      if (!newUsername || newUsername.trim().length === 0) return;
+
+      // Clear previous timer
+      if (debounceTimer) clearTimeout(debounceTimer);
+
+      debounceTimer = setTimeout(function () {
+        self.isChecking(true);
+        fetch(`http://localhost:8081/api/users/check-username?username=${encodeURIComponent(newUsername)}`)
+          .then(res => res.json())
+          .then(data => {
+            self.isChecking(false);
+            self.backendDone(true);
+
+            if (data.statusCode === 200) {
+              // ✅ Username available
+              self.successMessage(data.message);
+              self.isAvailable(true);
+              self.errorMessage('');
             } else {
-                return 'Username available!';
+              // ❌ Username invalid or taken
+              self.errorMessage(data.message || 'Invalid username');
+              self.isAvailable(false);
+              self.successMessage('');
             }
-        });
-        
-        // Validation state for UI styling
-        self.validationState = ko.computed(function() {
-            if (self.username().length === 0) {
-                return 'default';
-            }
-            return self.isValid() ? 'valid' : 'invalid';
-        });
-        
-        // Show status icon when valid
-        self.showStatusIcon = ko.computed(function() {
-            return self.isValid() && self.username().length > 0;
-        });
+          })
+          .catch(err => {
+            self.isChecking(false);
+            self.backendDone(true);
+            self.errorMessage('Error verifying username');
+            console.error('Username check error:', err);
+          });
+      }, 600); // 600ms debounce
+    });
 
-        // Previous Step function
-        self.previousStep = function () {
-            self.backButtonClick();
-        };
+    // -------------------------
+    // UI Computeds
+    // -------------------------
+    self.validationState = ko.computed(function () {
+      if (!self.backendDone()) return 'default';
+      if (self.errorMessage()) return 'invalid';
+      if (self.successMessage()) return 'valid';
+      return 'default';
+    });
 
-        // Next Step function with validation
-        self.nextStep = function () {
-            if (!self.isValid()) {
-                // Use Oracle JET dialog or logger instead of alert
-                oj.Logger.error("Please enter a valid username (8-16 characters).");
-                
-                // Optionally show an Oracle JET message
-                if (typeof self.showMessage === 'function') {
-                    self.showMessage({
-                        severity: 'error',
-                        summary: 'Validation Error',
-                        detail: 'Please enter a valid username (8-16 characters).',
-                        autoTimeout: 5000
-                    });
-                }
-                return;
-            }
-            
-            // If validation passes, go to next step
-            self.nextButtonClick();
-            oj.Logger.info("Proceeding with Username: " + self.username());
-            
-            // Optionally show success message
-            if (typeof self.showMessage === 'function') {
-                self.showMessage({
-                    severity: 'confirmation',
-                    summary: 'Success',
-                    detail: 'Username validated successfully!',
-                    autoTimeout: 3000
-                });
-            }
-        };
-        
-        /**
-         * Optional: Reset function to clear form
-         */
-        self.resetForm = function() {
-            self.username("");
-        };
-        
-        /**
-         * ViewModel lifecycle methods for Oracle JET
-         */
-        
-        // Called when ViewModel is activated
-        self.activate = function(context) {
-            // Implementation for activation if needed
-            oj.Logger.info("UsernameStepViewModel activated");
-            return Promise.resolve();
-        };
-        
-        // Called when ViewModel is transitioning away
-        self.deactivate = function() {
-            // Cleanup if needed
-            oj.Logger.info("UsernameStepViewModel deactivated");
-            return Promise.resolve();
-        };
-        
-        /**
-         * Optional: Message handling for Oracle JET messages
-         */
-        self.messageManager = ko.observable(null);
-        
-        // Function to show messages
-        self.showMessage = function(message) {
-            if (self.messageManager()) {
-                self.messageManager().addMessage(message);
-            } else {
-                // Fallback to console
-                console[message.severity === 'error' ? 'error' : 'log'](message.detail);
-            }
-        };
-        
-        // Called when ViewModel is disposed
-        self.dispose = function() {
-            // Cleanup computed observables
-            if (self.isValid && self.isValid.dispose) {
-                self.isValid.dispose();
-            }
-            if (self.validationMessage && self.validationMessage.dispose) {
-                self.validationMessage.dispose();
-            }
-            if (self.validationState && self.validationState.dispose) {
-                self.validationState.dispose();
-            }
-            if (self.showStatusIcon && self.showStatusIcon.dispose) {
-                self.showStatusIcon.dispose();
-            }
-            
-            oj.Logger.info("UsernameStepViewModel disposed");
-        };
-    }
-    
-    return UsernameStepViewModel;
+    self.showStatusIcon = ko.computed(function () {
+      return self.backendDone() && self.isAvailable();
+    });
+
+    // -------------------------
+    // Navigation Buttons
+    // -------------------------
+    self.previousStep = function () {
+      self.backButtonClick();
+    };
+
+    self.nextStep = function () {
+      if (!self.isAvailable()) {
+        oj.Logger.error('Please choose a valid and available username before proceeding.');
+        self.errorMessage('Please choose a valid and available username.');
+        return;
+      }
+
+      self.nextButtonClick();
+      oj.Logger.info('Proceeding with Username: ' + self.username());
+    };
+  }
+
+  return UsernameStepViewModel;
 });

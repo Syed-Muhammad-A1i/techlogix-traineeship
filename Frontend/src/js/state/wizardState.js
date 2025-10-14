@@ -8,9 +8,10 @@ define(['knockout'], function(ko) {
     iban: ko.observable(''),
     selectedOption: ko.observable('accountNumber'),
     username: ko.observable(''),
-    // password: ko.observable(''),
+    password: ko.observable(''),
     accountTitle: ko.observable(''), // New observable for account title
-    phoneNumber: ko.observable('') // New observable for phone number
+    phoneNumber: ko.observable(''), // New observable for phone number
+    currentStep: ko.observable(1) // New observable for current step
   };
 
   // Persist to sessionStorage so data is not lost on refresh
@@ -23,9 +24,10 @@ define(['knockout'], function(ko) {
       iban: wizardState.iban(),
       selectedOption: wizardState.selectedOption(),
       username: wizardState.username(),
-      // password: wizardState.password(),
+      password: wizardState.password(),
       accountTitle: wizardState.accountTitle(),
-      phoneNumber: wizardState.phoneNumber()
+      phoneNumber: wizardState.phoneNumber(),
+      currentStep: wizardState.currentStep()
     };
     sessionStorage.setItem('wizardState', JSON.stringify(state));
   }
@@ -41,9 +43,10 @@ define(['knockout'], function(ko) {
       wizardState.iban(parsed.iban || '');
       wizardState.selectedOption(parsed.selectedOption || 'accountNumber');
       wizardState.username(parsed.username || '');
-      // wizardState.password(parsed.password || '');
+      wizardState.password(parsed.password || '');
       wizardState.accountTitle(parsed.accountTitle || '');
       wizardState.phoneNumber(parsed.phoneNumber || '');
+      wizardState.currentStep(parsed.currentStep || 1);
     }
   }
 
@@ -56,7 +59,7 @@ define(['knockout'], function(ko) {
     wizardState.iban('');
     wizardState.selectedOption('accountNumber');
     wizardState.username('');
-    // wizardState.password('');
+    wizardState.password('');
     wizardState.accountTitle('');
     wizardState.phoneNumber('');
     sessionStorage.removeItem('wizardState');
