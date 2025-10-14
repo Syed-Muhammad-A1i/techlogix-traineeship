@@ -63,7 +63,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
               self.isAvailable(true);
               self.errorMessage('');
             } else {
-              // ❌ Username invalid or taken
+              //  Username invalid or taken
               self.errorMessage(data.message || 'Invalid username');
               self.isAvailable(false);
               self.successMessage('');
@@ -96,6 +96,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     // Navigation Buttons
     // -------------------------
     self.previousStep = function () {
+      wizardState.username(wizardState.phoneNumber());
       self.backButtonClick();
     };
 

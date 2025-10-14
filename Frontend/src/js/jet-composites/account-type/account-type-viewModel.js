@@ -41,8 +41,8 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
     // -------------------------
     self.accountTypes = ko.observableArray([
       { id: 1, name: "Individual", defaultImage: "css/images/Individual-Icon-Unfilled.svg", selectedImage: "css/images/Individual-Icon-Filled.svg" },
-      { id: 2, name: "Foreign National", defaultImage: "css/images/Foreign-National-Icon-Unfilled.svg", selectedImage: "css/images/Foreign-National-Icon-Filled.svg" }
-    ]);
+      { id: 2, name: "Foreign National", defaultImage: "css/images/Foreign-National-Icon-Unfilled.svg", selectedImage: "css/images/Foreign-National-Icon-Filled.svg" },
+      ]);
 
     self.selectAccountType = function (item) {
       self.selectedAccountType(item.name);
@@ -88,7 +88,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
       self.BackendcallDone(false);
       if (!self.isCnicValid()) {
         self.isMatched(false);
-        self.cnicErrorMessage("❌ CNIC must be 13 digits");
+        self.cnicErrorMessage(" CNIC must be 13 digits");
       } else {
         self.cnicErrorMessage("");
       }
@@ -116,7 +116,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
 
         if (!response.ok) {
           self.isMatched(false);
-          self.cnicErrorMessage("❌ CNIC not found in records");
+          self.cnicErrorMessage(" CNIC not found in records");
           return false;
         }
 

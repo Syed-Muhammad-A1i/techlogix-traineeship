@@ -15,19 +15,28 @@ define(['knockout',
     // -------------------------
     // Step tracking
     // -------------------------
-    self.steps = ko.observableArray([
-      { number: 1, title: 'Account Type' },
-      { number: 2, title: 'Account Details' },
-      { number: 3, title: 'Verification' },
-      { number: 4, title: 'Login Details' }
-    ]);
+    // Steps definition
+self.steps = ko.observableArray([
+  { number: 1, title: 'Account Type' },
+  { number: 2, title: 'Account Details' },
+  { number: 3, title: 'Verification' },
+  { number: 4, title: 'Login Details' }
+]);
 
-    // Current visible page
-    self.currentStep = wizardState.currentStep; // Start at step 1;
+// currentStep is already bound to wizardState
+self.currentStep = wizardState.currentStep;
 
+// Active & Completed logic
+self.isStepActive = function(stepNumber) {
+  return self.currentStep() === stepNumber;
+};
+
+self.isStepCompleted = function(stepNumber) {
+  return self.currentStep() > stepNumber;
+};
     self.currentPage = ko.observable(1); // Start at page1
     // Define page order
-    self.pageOrder = [1, 2, 3, 4, 5, 6, 7];
+    self.pageOrder = [1, 2, 3, 4, 5, 6];
     
     // Go directly to page
     self.goToPage = function(page) {
@@ -37,8 +46,11 @@ define(['knockout',
     // Next page
     self.nextPage = function() {
       var currentIndex = self.pageOrder.indexOf(self.currentPage());
-      if (currentIndex < self.pageOrder.length ) {
+      if (currentIndex < self.pageOrder.length-1 ) {
         self.currentPage(self.pageOrder[currentIndex + 1]);
+      }
+      if(currentIndex === self.pageOrder.length - 1) {
+        self.currentPage(self.pageOrder[0]); // Reset to step 1 for next time
       }
     };
 

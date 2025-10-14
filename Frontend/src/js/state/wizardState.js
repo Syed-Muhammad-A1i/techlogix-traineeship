@@ -53,7 +53,7 @@ define(['knockout'], function(ko) {
   // ✅ Clear all data from observables + sessionStorage
   wizardState.clear = function() {
     wizardState.cnic('');
-    wizardState.accountType('');
+    wizardState.accountType('Individual');
     wizardState.accountNumber('');
     wizardState.accno('');
     wizardState.iban('');

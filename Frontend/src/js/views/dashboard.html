@@ -1,26 +1,33 @@
-<div class="container">
-  <div class="progress-steps" data-bind="visible: currentPage() < 6">
+<div class="container" data-bind="visible: currentPage() < 6">
+  <ul class="stepper" data-bind="foreach: steps, visible: currentPage() < 6">
+    <li
+      class="step-item"
+      data-bind="css: {
+        'step-item-line': $parent.isStepCompleted(number)
+      }"
+    >
+      <span
+        class="step-circle"
+        data-bind="css: {
+          'step-active': $parent.isStepActive(number),
+          'step-completed': $parent.isStepCompleted(number)
+        }"
+      >
+        <span class="step-circle-content" data-bind="text: number"></span>
+      </span>
 
-      <div class="step-container" data-bind="foreach: steps">
-        <div class="step-item">
-          <div class="step-circle" data-bind="css: { 
-            'active': $parent.currentStep() === number, 
-            'completed': $parent.currentStep() > number,
-            'upcoming': $parent.currentStep() < number
-          }">
-            <span data-bind="text: number"></span>
-          </div>
-          <span class="step-label" data-bind="text: title, css: { 
-            'active': $parent.currentStep() === number,
-            'completed': $parent.currentStep() > number,
-            'upcoming': $parent.currentStep() < number
-          }"></span>
-        </div>
-        <!-- ko if: $index() < $parent.steps().length - 1 -->
-        <div class="step-connector" data-bind="css: { 'completed': $parent.currentStep() > number }"></div>
-        <!-- /ko -->
-      </div>
-  </div>
+      <!-- Step title with dynamic styling -->
+      <span
+        class="step-title"
+        data-bind="css: {
+          'title-active': $parent.isStepActive(number),
+          'title-completed': $parent.isStepCompleted(number)
+        }, text: title"
+      ></span>
+    </li>
+  </ul>
+
+
 
     <oj-bind-if test="[[ currentPage() === 1 ]]">
       <account-type></account-type>
@@ -43,11 +50,12 @@
     <oj-bind-if test="[[ currentPage() === 5 ]]">
       <terms-conditions></terms-conditions>
     </oj-bind-if>
-  </div>
-    
-<oj-bind-if test="[[ currentPage() === 6 ]]">
-  <user-confirmation></user-confirmation>
-</oj-bind-if>
+</div>
+    <div class="confirmation">
+      <oj-bind-if test="[[ currentPage() === 6 ]]">
+        <user-confirmation></user-confirmation>
+      </oj-bind-if>
+    </div>
 
 <oj-bind-if test="[[ currentPage() === 7 ]]">
   <login-page></login-page>

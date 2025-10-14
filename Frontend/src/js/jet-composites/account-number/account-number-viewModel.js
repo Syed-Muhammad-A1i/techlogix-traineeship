@@ -119,9 +119,9 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
             console.log("Verified Phone Number:", data.data.phoneNumber);
             return true;
           } else {
-            // ❌ Verification failed
+            //  Verification failed
             self.isMatched(false);
-            self.cnicErrorMessage("❌ Account Number Not Matched");
+            self.cnicErrorMessage(" Account Number Not Matched");
             return false;
           }
         })
@@ -141,6 +141,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     // Navigation buttons
     // -------------------------
     self.previousStep = function () {
+      wizardState.accountNumber('');
       self.backButtonClick();
     };
 
@@ -148,7 +149,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
       self.accEdited(true);
 
       if (!self.isAccNoValid()) {
-        self.cnicErrorMessage("❌ Please enter a valid 14-digit Account Number");
+        self.cnicErrorMessage(" Please enter a valid 14-digit Account Number");
         return;
       }
 

@@ -1,90 +1,78 @@
-
 define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState) {
-    'use strict';
-    
-    function tncViewModel() {
-        var self = this;
-        console.log('hello');
+  'use strict';
+  
+  function tncViewModel() {
+    var self = this;
+    console.log('hello');
 
-        // Next button click handler in your component
-        self.nextButtonClick = function() {
-            
-          document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'next',
-              from: 5
-            },
-            bubbles: true  // This ensures the event bubbles up
-          }));
-        };
+    // 🔸 Toast observable
+    self.showToast = ko.observable(false);
 
-        // Back button click handler in your component
-        self.backButtonClick = function() {
-          document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'previous', 
-              from: 5
-            },
-            bubbles: true
-          }));
-        };
-                // Progress Steps Configuration
-        // self.steps = ko.observableArray([
-        //     { number: 1, title: 'Account Type' },
-        //     { number: 2, title: 'Account Details' },
-        //     { number: 3, title: 'Verification' },
-        //     { number: 4, title: 'Login Details' }
-        // ]);
+    // 🔸 Function to show and auto-hide toast
+    self.createAccount = function() {
+      self.showToast(true);
+      setTimeout(() => self.showToast(false), 6000);
+    };
 
-        // self.currentStep = ko.observable(4); // Current active step
-        
-        wizardState.currentStep(4); // Ensure wizardState is synced
+    // 🔸 Navigation events
+    self.nextButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: { action: 'next', from: 5 },
+        bubbles: true
+      }));
+    };
 
-        // Previous Step function
-        self.previousStep = function () {
-            self.backButtonClick();
-        };
+    self.backButtonClick = function() {
+      document.dispatchEvent(new CustomEvent('navigation', {
+        detail: { action: 'previous', from: 5 },
+        bubbles: true
+      }));
+    };
 
-        // Next Step function with validation
-        self.nextStep = async function () {
-            // If validation passes, go to next step
-            // Prepare data for backend
-            const payload = {
-                username: wizardState.username(),
-                password: wizardState.password(),
-                phone_number: wizardState.phoneNumber()
-            };
+    // 🔸 Ensure current step syncs with wizardState
+    wizardState.currentStep(4);
 
-            const accountNumber = wizardState.accountNumber();
+    // 🔸 Go to previous step
+    self.previousStep = function() {
+      self.backButtonClick();
+    };
 
-            try {
-                const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(payload)
-                });
+    // 🔸 Go to next step (with API call)
+    self.nextStep = async function() {
+      const payload = {
+        username: wizardState.username(),
+        password: wizardState.password(),
+        phone_number: wizardState.phoneNumber()
+      };
 
-                if (!response.ok) {
-                    throw new Error("❌ Failed to update login details");
-                }
+      const accountNumber = wizardState.accountNumber();
 
-                const result = await response.json();
-                console.log("✅ Login details updated:", result);
+      try {
+        const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-                alert("✅ Account setup completed successfully!");
-                self.nextButtonClick();
+        if (!response.ok) throw new Error("Failed to update login details");
 
-            } catch (error) {
-                console.error("Error saving login details:", error);
-                alert("⚠️ Unable to save details. Please try again.");
-            }
-            // self.nextButtonClick();
-            
-        };
-        
-    }
+        const result = await response.json();
+        console.log("✅ Login details updated:", result);
 
-    return tncViewModel;
+        // 🟢 Show success toast
+        self.createAccount();
+
+        // 🟢 Navigate after toast disappears (small delay)
+        setTimeout(() => {
+          self.nextButtonClick();
+        }, 800);
+
+      } catch (error) {
+        console.error("Error saving login details:", error);
+        alert("⚠️ Unable to save details. Please try again.");
+      }
+    };
+  }
+
+  return tncViewModel;
 });

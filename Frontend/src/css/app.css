@@ -106,7 +106,7 @@ body {
     margin-left: -160px;
 } */
 
-.container {
+/* .container {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
@@ -115,6 +115,21 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   width: 130%;
   max-width: 900px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+} */
+
+.container {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  
+  width: 850px;      /* Fixed width */
+  height: 530px;     /* Fixed height */
+  
   overflow: hidden;
   transition: all 0.3s ease;
 }
@@ -330,113 +345,124 @@ body {
         padding: 20px;
     }
 }
-
-.progress-steps {
-    background-color: white;
-    padding: 20px;
-    border-radius: 0;
-}
-
-.step-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
+.stepper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 70px;
+  padding: 0;
+  /* margin: 2rem 0; */
+  margin: 30px 30px 10px;
 }
 
 .step-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+.step-item::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-left: 10px;
+  width: 50px;
+  height: 2px;
+  background-color: #ccc;
+  z-index: -1;
+}
+
+.step-item-line::after {
+  background-color: #2bb368;
+}
+
+.step-item:last-child::after {
+  content: none;
 }
 
 .step-circle {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    border: 2px solid #ddd;
-    background-color: #f5f5f5;
-    color: #999;
+  width: 34px;              /* fixed width for a true circle */
+  height: 34px;             /* fixed height for a true circle */
+  border-radius: 50%;       /* perfect circle */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  border: 2px solid grey;
+  color: #919191;
+  font-weight: bold;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 10px;
 }
 
-.step-circle.active {
-    background-color: #25973e;
-    border-color: #25973e;
-    color: white;
-    box-shadow: 0 0 0 4px rgba(37, 151, 62, 0.2);
+/* Active step */
+.step-active {
+  transform: scale(1.05);
+  color: #919191;
 }
 
-.step-circle.completed {
-    background-color: #25973e;
-    border-color: #25973e;
-    color: white;
+.step-active::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  height: 3px;
+  background-color: #4caf50;
+  border-radius: 4px;
 }
 
-.step-circle.upcoming {
-    background-color: #f5f5f5;
-    border-color: #ddd;
-    color: #999;
+/* Completed step */
+.step-completed {
+  background-color: #28c346 !important;
+  color: white !important;
+  border-color: #28c346 !important;
 }
 
-.step-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #666;
-    text-align: center;
-    white-space: nowrap;
-    transition: all 0.3s ease;
+
+.step-completed {
+  background-color: #28c346 !important;
+  color: white !important;
+  border-color: #28c346 !important;
 }
 
-.step-label.active {
-    color: #25973e;
-    font-weight: bold;
+.step-title {
+  font-size: 12px;
+  text-align: center;
+  color: #a5a5a5;
+  font-weight: 600;
+  padding-left: 5px;
 }
 
-.step-label.completed {
-    color: #25973e;
+.title-completed {
+  color: #4caf50 !important;
+  font-weight: 600 !important;
 }
 
-.step-label.upcoming {
-    color: #999;
-}
-
-.step-connector {
-    width: 60px;
-    height: 2px;
-    background-color: #ddd;
-    margin: 0 20px;
-    transition: all 0.3s ease;
-}
-
-.step-connector.completed {
-    background-color: #25973e;
-}
-
-/* Responsive adjustments */
+/* Optional: make it responsive */
 @media (max-width: 600px) {
-    .step-container {
-        gap: 10px;
-    }
-    
-    .step-connector {
-        width: 30px;
-        margin: 0 10px;
-    }
-    
-    .step-circle {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
-    }
-    
-    .step-label {
-        font-size: 10px;
-    }
+  .stepper {
+    gap: 30px;
+  }
+
+  .step-circle {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .step-title {
+    font-size: 10px;
+  }
+
+  .step-item::after {
+    width: 30px;
+  }
 }

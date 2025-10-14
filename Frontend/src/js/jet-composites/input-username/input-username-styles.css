@@ -274,15 +274,16 @@
 .username-info {
     /* background: ; */
     /* border-left: 4px solid #3498db; */
-    padding: 1px;
+    /* padding: 1px; */
     border-radius: 0 5px 5px 0;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
+    margin-top: 1px;
     width: 50%;
 }
 
 .username-info p {
-    margin-bottom: 10px;
-    font-size: 15px;
+    margin-bottom: 5px;
+    font-size: small;
     line-height: 1.5;
 }
 
@@ -391,12 +392,12 @@ li::marker {
 
 .status-message {
   color: #28a745;
-  font-size: 14px;
+  font-size: small;
 }
 
 .error-message {
   color: #dc3545;
-  font-size: 14px;
+  font-size: small;
 }
 
 .form-input {

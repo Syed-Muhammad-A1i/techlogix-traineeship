@@ -169,7 +169,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             //     });
 
             //     if (!response.ok) {
-            //         throw new Error("❌ Failed to update login details");
+            //         throw new Error(" Failed to update login details");
             //     }
 
             //     const result = await response.json();
@@ -294,7 +294,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
 //                 });
 
 //                 if (!response.ok) {
-//                     throw new Error("❌ Failed to update login details");
+//                     throw new Error(" Failed to update login details");
 //                 }
 
 //                 const result = await response.json();

@@ -10,6 +10,6 @@ public class UserService {
     private UserRepository userRepository;
 
     public boolean isUsernameAvailable(String username) {
-        return !userRepository.existsByUsername(username);
+        return !userRepository.existsByUsernameIgnoreCase(username);
     }
 }

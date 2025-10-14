@@ -18,7 +18,6 @@ define(
        };
 
        self.nextButtonClick = function() {
-            
           document.dispatchEvent(new CustomEvent('navigation', {
             detail: {
               action: 'next',

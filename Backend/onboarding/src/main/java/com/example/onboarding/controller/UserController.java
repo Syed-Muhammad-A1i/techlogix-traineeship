@@ -36,7 +36,7 @@ public class UserController {
         }
 
         // 🔍 Step 2: Check availability
-        boolean available = userService.isUsernameAvailable(username);
+        boolean available = userService.isUsernameAvailable(username.toLowerCase());
         String message = available ? "Username is available" : "Username is already taken";
 
         ApiResponse<Void> response = ApiResponse.<Void>builder()
