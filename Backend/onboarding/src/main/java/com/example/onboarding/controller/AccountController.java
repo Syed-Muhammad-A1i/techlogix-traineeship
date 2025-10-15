@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:8000")
@@ -47,16 +48,16 @@ public class AccountController {
     }
 
     // POST: Update login details
-    @PostMapping("/{account_number}")
+    @PostMapping("/{cnic}")
     public ResponseEntity<ApiResponse<Account>> updateLogin(
-            @PathVariable String account_number,
+            @PathVariable String cnic,
             @RequestBody Map<String, String> body) {
 
         Account updated = accountService.updateLoginDetails(
-                account_number,
+                cnic,
                 body.get("username"),
-                body.get("password"),
-                body.get("phone_number")
+                body.get("password")
+
         );
 
         ApiResponse<Account> response = ApiResponse.<Account>builder()

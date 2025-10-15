@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Data                           // Generates getters, setters, equals, hashCode, toString
@@ -11,10 +13,15 @@ import lombok.*;
 @AllArgsConstructor             // All-args constructor
 @Builder                        // Enables builder pattern
 public class User {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "cnic")
+    private String cnic;  // same CNIC as Account
+
+    @OneToOne
+    @MapsId  // tells JPA to use the same PK as Account
+    @JoinColumn(name = "cnic")
+    @JsonManagedReference
+    private Account account;
 
     @Column(name = "username", nullable = false, unique = true)
     private String username;
@@ -22,11 +29,7 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "phone_number", nullable = false)
-    private String phoneNumber;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @OneToOne
-    @JoinColumn(name = "account_number", referencedColumnName = "account_number")
-    @JsonManagedReference
-    private Account account;
 }

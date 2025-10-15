@@ -41,14 +41,13 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
     self.nextStep = async function() {
       const payload = {
         username: wizardState.username(),
-        password: wizardState.password(),
-        phone_number: wizardState.phoneNumber()
+        password: wizardState.password()
       };
 
-      const accountNumber = wizardState.accountNumber();
+      const cnic = wizardState.cnic();
 
       try {
-        const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
+        const response = await fetch(`http://localhost:8081/api/accounts/${cnic}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)

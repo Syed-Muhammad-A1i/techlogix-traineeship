@@ -116,7 +116,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
 
         if (!response.ok) {
           self.isMatched(false);
-          self.cnicErrorMessage(" CNIC not found in records");
+          self.cnicErrorMessage(result.message || "CNIC not found");
           return false;
         }
 

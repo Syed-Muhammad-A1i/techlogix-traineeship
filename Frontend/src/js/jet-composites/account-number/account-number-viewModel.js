@@ -40,7 +40,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     self.accountNumber = wizardState.accountNumber;
     self.iban = wizardState.iban;
     self.selectedOption = wizardState.selectedOption;
-    self.cnic = ko.observable("6110112345675"); // Default CNIC for testing
+    self.cnic = wizardState.cnic; // Default CNIC for testing
 
     // For storing verified account details
     wizardState.accountTitle = wizardState.accountTitle || ko.observable("");

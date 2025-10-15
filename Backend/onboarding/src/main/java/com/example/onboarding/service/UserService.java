@@ -12,4 +12,8 @@ public class UserService {
     public boolean isUsernameAvailable(String username) {
         return !userRepository.existsByUsernameIgnoreCase(username);
     }
+
+//    public boolean isUserAvailable(String cnic){
+//        return !userRepository.findByCnic(cnic);
+//    }
 }

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -29,9 +30,18 @@ public class AccountService {
 
     // Get account by CNIC
     public void checkCnicExists(String cnic) {
-        boolean exists = accountRepository.findByCnic(cnic).isPresent();
-        if (!exists) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "CNIC not found");
+        // Step 1️⃣: Check if account exists
+        Account account = accountRepository.findByCnic(cnic)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found for this CNIC"));
+
+        // Step 2️⃣: Check if account is active
+        if (!account.isAccountStatus())
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account is inactive");
+
+
+        boolean userExists = userRepository.findByCnic(cnic).isPresent();
+        if (userExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists for this CNIC");
         }
         // No return needed, just passes if CNIC exists
     }
@@ -46,12 +56,12 @@ public class AccountService {
     }
 
     // Update login details
-    public Account updateLoginDetails(String accountNumber, String username, String password, String phoneNumber) {
-        if (username == null || password == null || phoneNumber == null) {
+    public Account updateLoginDetails(String cnic, String username, String password) {
+        if (username == null || password == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Username, password, and phone number are required");
         }
 
-        Account account = accountRepository.findByAccountNumber(accountNumber)
+        Account account = accountRepository.findByCnic(cnic)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
 
         User user = account.getUser();
@@ -62,7 +72,8 @@ public class AccountService {
 
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setPhoneNumber(phoneNumber);
+        user.setCreatedAt(LocalDateTime.now());
+
 
         userRepository.save(user);
         return account;
