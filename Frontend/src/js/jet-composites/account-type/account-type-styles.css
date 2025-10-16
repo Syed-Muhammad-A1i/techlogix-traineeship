@@ -48,10 +48,12 @@
 
 .cnic-input.valid {
   border: 2px solid #28a745; /* green */
+  color: black;
 }
 
 .cnic-input.invalid {
   border: 2px solid #dc3545; /* red */
+  color: black;
 }
 
 .cnic-input.default {

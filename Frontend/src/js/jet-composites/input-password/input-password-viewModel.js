@@ -10,37 +10,21 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         // Next button click handler in your component
         self.nextButtonClick = function() {
           document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'next',
-              from: 4
-            },
-            bubbles: true  // This ensures the event bubbles up
+            detail: { action: 'next', from: 4 },
+            bubbles: true
           }));
         };
 
         // Back button click handler in your component
         self.backButtonClick = function() {
           document.dispatchEvent(new CustomEvent('navigation', {
-            detail: {
-              action: 'previous', 
-              from: 4
-            },
+            detail: { action: 'previous', from: 4 },
             bubbles: true
           }));
         };
         
-        // Progress Steps Configuration
-        // self.steps = ko.observableArray([
-        //     { number: 1, title: 'Account Type' },
-        //     { number: 2, title: 'Account Details' },
-        //     { number: 3, title: 'Verification' },
-        //     { number: 4, title: 'Login Details' }
-        // ]);
-
-        // self.currentStep = ko.observable(4); // Current active step
         wizardState.currentStep(4); // Ensure wizardState is synced
 
-        //Component Functionality Start Here
         // Password observables
         self.password = ko.observable('');
         self.confirmPassword = ko.observable('');
@@ -49,6 +33,10 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         self.showPassword = ko.observable(false);
         self.showConfirmPassword = ko.observable(false);
         
+        // Toast observables
+        self.toastMessage = ko.observable('');
+        self.showToast = ko.observable(false);
+
         // Toggle functions for show/hide password
         self.toggleShowPassword = function() {
             self.showPassword(!self.showPassword());
@@ -64,19 +52,10 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             if (pwd.length === 0) return 0;
             
             var strength = 0;
-            
-            // Length check
             if (pwd.length >= 8) strength += 1;
-            
-            // Contains both lowercase and uppercase
             if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) strength += 1;
-            
-            // Contains numbers
             if (/\d/.test(pwd)) strength += 1;
-            
-            // Contains special characters
             if (/[^A-Za-z0-9]/.test(pwd)) strength += 1;
-            
             return strength;
         });
         
@@ -139,55 +118,74 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         self.isFormValid = ko.computed(function() {
             return self.password().length >= 8 && self.passwordsMatch();
         });
+
+        // ✅ Helper: Check if password is alphanumeric
+        self.isAlphanumeric = function(pwd) {
+            return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&#^()_+\-={}\[\]:;"'<>,.~`|\\\/]+$/.test(pwd);
+
+        };
+
+
+        // ✅ Helper: Show toast message
+        self.showToastMessage = function(message) {
+            self.toastMessage(message);
+            self.showToast(true);
+            setTimeout(() => self.showToast(false), 3000);
+        };
+
+        // ✅ Helper: Hash password using SHA-256
+        self.hashPassword = async function(password) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        };
+
         
         // Updated Button Functions
         self.previousStep = function () {
             self.backButtonClick();
         };
 
+        
         self.nextStep = async function () {
-            if (!self.passwordsMatch()) {
-                alert("⚠️ Please ensure passwords match.");
+            const pwd = self.password();
+            const strength = self.strength();
+
+            // 🚫 Empty password check
+            if (!pwd) {
+                self.showToastMessage("⚠️ Password cannot be empty.");
                 return;
             }
-            // // Prepare data for backend
-            // const payload = {
-            //     username: wizardState.username(),
-            //     password: self.password(),
-            //     phone_number: wizardState.phoneNumber()
-            // };
 
-            // const accountNumber = wizardState.accountNumber();
+            // 🚫 Non-alphanumeric check
+            if (!self.isAlphanumeric(pwd)) {
+                self.showToastMessage("Password must be alphanumeric.");
+                return;
+            }
 
-            // try {
-            //     const response = await fetch(`http://localhost:8081/api/accounts/${accountNumber}`, {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json"
-            //         },
-            //         body: JSON.stringify(payload)
-            //     });
+            // 🚫 Weak password check (strength <= 1 means weak)
+            if (strength <= 1) {
+                self.showToastMessage("Password is too weak. Please make it stronger (use letters + numbers, min 8 chars).");
+                return;
+            }
 
-            //     if (!response.ok) {
-            //         throw new Error(" Failed to update login details");
-            //     }
-
-            //     const result = await response.json();
-            //     console.log("✅ Login details updated:", result);
-
-            //     alert("✅ Account setup completed successfully!");
-            //     self.nextButtonClick();
-
-            // } catch (error) {
-            //     console.error("Error saving login details:", error);
-            //     alert("⚠️ Unable to save details. Please try again.");
-            // }
+            // 🚫 Password match check
+            if (!self.passwordsMatch()) {
+                self.showToastMessage("Please ensure passwords match.");
+                return;
+            }
             
-            wizardState.password(self.password());
-            // If validation passes, go to next step
+            const hashedPassword = await self.hashPassword(pwd);
+            console.log("Hashed Password:", hashedPassword);
+            // ✅ Passed all checks — proceed
+            wizardState.password(hashedPassword);
             self.nextButtonClick();
-            // alert("✅ Proceeding to next step!");
         };
+
+        
 
         /**
          * ViewModel lifecycle methods for Oracle JET
@@ -201,7 +199,6 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         };
         
         self.dispose = function() {
-            // Cleanup computed observables
             const computeds = [
                 'strength', 'strengthPercentage', 'strengthText', 'strengthClass',
                 'passwordBorderClass', 'passwordsMatch', 'matchText', 'matchClass',
@@ -218,101 +215,3 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
     
     return PasswordStepViewModel;
 });
-
-// define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
-//     'use strict';
-    
-//     function PasswordStepViewModel() {
-//         var self = this;
-        
-//         // Navigation events
-//         self.nextButtonClick = function() {
-//             document.dispatchEvent(new CustomEvent('navigation', {
-//                 detail: { action: 'next', from: 4 },
-//                 bubbles: true
-//             }));
-//         };
-
-//         self.backButtonClick = function() {
-//             document.dispatchEvent(new CustomEvent('navigation', {
-//                 detail: { action: 'previous', from: 4 },
-//                 bubbles: true
-//             }));
-//         };
-        
-//         // Progress steps
-//         self.steps = ko.observableArray([
-//             { number: 1, title: 'Account Type' },
-//             { number: 2, title: 'Account Details' },
-//             { number: 3, title: 'Verification' },
-//             { number: 4, title: 'Login Details' }
-//         ]);
-//         self.currentStep = ko.observable(4);
-
-//         // Password observables
-//         self.password = wizardState.password;
-//         self.confirmPassword = ko.observable('');
-        
-//         // Show/Hide
-//         self.showPassword = ko.observable(false);
-//         self.showConfirmPassword = ko.observable(false);
-//         self.toggleShowPassword = function() { self.showPassword(!self.showPassword()); };
-//         self.toggleShowConfirmPassword = function() { self.showConfirmPassword(!self.showConfirmPassword()); };
-
-//         // Password validation
-//         self.passwordsMatch = ko.computed(function() {
-//             return self.password() === self.confirmPassword() && self.password().length > 0;
-//         });
-
-//         self.isFormValid = ko.computed(function() {
-//             return self.password().length >= 8 && self.passwordsMatch();
-//         });
-
-//         // 🔥 Call backend API to store login details
-//         self.nextStep = async function () {
-//             if (!self.passwordsMatch()) {
-//                 alert("⚠️ Please ensure passwords match.");
-//                 return;
-//             }
-
-//             // Prepare data for backend
-//             const payload = {
-//                 username: wizardState.username(),
-//                 password: self.password(),
-//                 phone_number: wizardState.phoneNumber()
-//             };
-
-//             const accountNumber = wizardState.accountNumber();
-
-//             try {
-//                 const response = await fetch(`http://localhost:8080/api/accounts/${accountNumber}`, {
-//                     method: "POST",
-//                     headers: {
-//                         "Content-Type": "application/json"
-//                     },
-//                     body: JSON.stringify(payload)
-//                 });
-
-//                 if (!response.ok) {
-//                     throw new Error(" Failed to update login details");
-//                 }
-
-//                 const result = await response.json();
-//                 console.log("✅ Login details updated:", result);
-
-//                 alert("✅ Account setup completed successfully!");
-//                 self.nextButtonClick();
-
-//             } catch (error) {
-//                 console.error("Error saving login details:", error);
-//                 alert("⚠️ Unable to save details. Please try again.");
-//             }
-//         };
-
-//         self.previousStep = function () {
-//             self.backButtonClick();
-//         };
-//     }
-    
-//     return PasswordStepViewModel;
-// });

@@ -3,6 +3,7 @@ package com.example.onboarding.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.processing.Pattern;
 
 import java.time.LocalDateTime;
 
@@ -15,10 +16,10 @@ import java.time.LocalDateTime;
 public class Account {
 
     @Id
-    @Column(name = "cnic", nullable = false, unique = true)
+    @Column(name = "cnic", nullable = false, unique = true, length = 13)
     private String cnic;
 
-    @Column(name = "account_number", nullable = false, unique = true)
+    @Column(name = "account_number", nullable = false, unique = true, length = 14)
     private String accountNumber;
 
     @Column(name = "account_type", nullable = false)
