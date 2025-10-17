@@ -34,50 +34,55 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     self.backendDone = ko.observable(false);
 
     // -------------------------
-    // Debounced Backend Validation
-    // -------------------------
-    let debounceTimer = null;
+// Debounced Backend Validation
+// -------------------------
+let debounceTimer = null;
 
-    self.username.subscribe(function (newUsername) {
-      self.backendDone(false);
-      self.isAvailable(false);
-      self.errorMessage('');
-      self.successMessage('');
+// Function to perform the check
+function checkUsername(newUsername) {
+  self.backendDone(false);
+  self.isAvailable(false);
+  self.errorMessage('');
+  self.successMessage('');
 
-      if (!newUsername || newUsername.trim().length === 0) return;
+  if (!newUsername || newUsername.trim().length === 0) return;
 
-      // Clear previous timer
-      if (debounceTimer) clearTimeout(debounceTimer);
+  if (debounceTimer) clearTimeout(debounceTimer);
 
-      debounceTimer = setTimeout(function () {
-        self.isChecking(true);
-        fetch(`http://localhost:8081/api/users/check-username?username=${encodeURIComponent(newUsername)}`)
-          .then(res => res.json())
-          .then(data => {
-            self.isChecking(false);
-            self.backendDone(true);
+  debounceTimer = setTimeout(function () {
+    self.isChecking(true);
+    fetch(`http://localhost:8081/api/users/check-username?username=${encodeURIComponent(newUsername)}`)
+      .then(res => res.json())
+      .then(data => {
+        self.isChecking(false);
+        self.backendDone(true);
 
-            if (data.statusCode === 200) {
-              // ✅ Username available
-              self.successMessage(data.message);
-              self.isAvailable(true);
-              self.errorMessage('');
-            } else {
-              //  Username invalid or taken
-              self.errorMessage(data.message || 'Invalid username');
-              self.isAvailable(false);
-              self.successMessage('');
-            }
-          })
-          .catch(err => {
-            self.isChecking(false);
-            self.backendDone(true);
-            self.errorMessage('Error verifying username');
-            console.error('Username check error:', err);
-          });
-      }, 600); // 600ms debounce
-    });
+        if (data.statusCode === 200) {
+          self.successMessage(data.message);
+          self.isAvailable(true);
+          self.errorMessage('');
+        } else {
+          self.errorMessage(data.message || 'Invalid username');
+          self.isAvailable(false);
+          self.successMessage('');
+        }
+      })
+      .catch(err => {
+        self.isChecking(false);
+        self.backendDone(true);
+        self.errorMessage('Error verifying username');
+        console.error('Username check error:', err);
+      });
+  }, 600); // 600ms debounce
+}
 
+// Subscribe for user typing
+self.username.subscribe(checkUsername);
+
+// -------------------------
+// Trigger check immediately on page load
+// -------------------------
+checkUsername(self.username());
     // -------------------------
     // UI Computeds
     // -------------------------
@@ -110,6 +115,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
       self.nextButtonClick();
       oj.Logger.info('Proceeding with Username: ' + self.username());
     };
+
   }
 
   return UsernameStepViewModel;
