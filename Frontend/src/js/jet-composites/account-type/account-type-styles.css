@@ -153,6 +153,10 @@ option.active {
     padding: 12px 70px; /* Increased padding */
 }
 
+.btn-next:disabled {
+    cursor: not-allowed;
+}
+
 .btn:hover {
     opacity: 0.9;
     transform: translateY(-2px);

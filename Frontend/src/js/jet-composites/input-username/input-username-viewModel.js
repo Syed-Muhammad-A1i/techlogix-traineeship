@@ -1,4 +1,4 @@
-define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizardState) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], function (oj, ko, wizardState, toastService) {
   'use strict';
 
   function UsernameStepViewModel() {
@@ -34,55 +34,62 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     self.backendDone = ko.observable(false);
 
     // -------------------------
-// Debounced Backend Validation
-// -------------------------
-let debounceTimer = null;
+    // Debounced Backend Validation
+    // -------------------------
+    let debounceTimer = null;
 
-// Function to perform the check
-function checkUsername(newUsername) {
-  self.backendDone(false);
-  self.isAvailable(false);
-  self.errorMessage('');
-  self.successMessage('');
+    // Function to perform the check
+    function checkUsername(newUsername) {
+      self.backendDone(false);
+      self.isAvailable(false);
+      self.errorMessage('');
+      self.successMessage('');
 
-  if (!newUsername || newUsername.trim().length === 0) return;
+      if (!newUsername || newUsername.trim().length === 0) return;
 
-  if (debounceTimer) clearTimeout(debounceTimer);
-
-  debounceTimer = setTimeout(function () {
-    self.isChecking(true);
-    fetch(`http://localhost:8081/api/users/check-username?username=${encodeURIComponent(newUsername)}`)
-      .then(res => res.json())
-      .then(data => {
-        self.isChecking(false);
+      if (/\s/.test(newUsername)) {
+        self.errorMessage('Username cannot contain spaces.');
+        self.isAvailable(false);
         self.backendDone(true);
+        return; // stop here, don’t call backend
+      }
 
-        if (data.statusCode === 200) {
-          self.successMessage(data.message);
-          self.isAvailable(true);
-          self.errorMessage('');
-        } else {
-          self.errorMessage(data.message || 'Invalid username');
-          self.isAvailable(false);
-          self.successMessage('');
-        }
-      })
-      .catch(err => {
-        self.isChecking(false);
-        self.backendDone(true);
-        self.errorMessage('Error verifying username');
-        console.error('Username check error:', err);
-      });
-  }, 600); // 600ms debounce
-}
+      if (debounceTimer) clearTimeout(debounceTimer);
 
-// Subscribe for user typing
-self.username.subscribe(checkUsername);
+      debounceTimer = setTimeout(function () {
+        self.isChecking(true);
+        fetch(`http://localhost:8081/api/users/check-username?username=${encodeURIComponent(newUsername)}`)
+          .then(res => res.json())
+          .then(data => {
+            self.isChecking(false);
+            self.backendDone(true);
 
-// -------------------------
-// Trigger check immediately on page load
-// -------------------------
-checkUsername(self.username());
+            if (data.statusCode === 200) {
+              self.successMessage(data.message);
+              self.isAvailable(true);
+              self.errorMessage('');
+            } else {
+              self.errorMessage(data.message || 'Invalid username');
+              self.isAvailable(false);
+              self.successMessage('');
+            }
+          })
+          .catch(err => {
+            self.isChecking(false);
+            self.backendDone(true);
+            self.errorMessage('Error verifying username');
+            console.error('Username check error:', err);
+          });
+      }, 600); // 600ms debounce
+    }
+
+    // Subscribe for user typing
+    self.username.subscribe(checkUsername);
+
+    // -------------------------
+    // Trigger check immediately on page load
+    // -------------------------
+    checkUsername(self.username());
     // -------------------------
     // UI Computeds
     // -------------------------

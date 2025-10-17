@@ -1,20 +1,12 @@
-define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], function(oj, ko, wizardState, toastService) {
   'use strict';
   
   function tncViewModel() {
     var self = this;
-    console.log('hello');
 
-    // 🔸 Toast observable
-    self.showToast = ko.observable(false);
+    self.toastService = toastService;
 
-    // 🔸 Function to show and auto-hide toast
-    self.createAccount = function() {
-      self.showToast(true);
-      setTimeout(() => self.showToast(false), 6000);
-    };
-
-    // 🔸 Navigation events
+    //  Navigation events
     self.nextButtonClick = function() {
       document.dispatchEvent(new CustomEvent('navigation', {
         detail: { action: 'next', from: 5 },
@@ -29,15 +21,15 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
       }));
     };
 
-    // 🔸 Ensure current step syncs with wizardState
+    //  Ensure current step syncs with wizardState
     wizardState.currentStep(4);
 
-    // 🔸 Go to previous step
+    //  Go to previous step
     self.previousStep = function() {
       self.backButtonClick();
     };
 
-    // 🔸 Go to next step (with API call)
+    //  Go to next step (with API call)
     self.nextStep = async function() {
       const payload = {
         username: wizardState.username(),
@@ -56,19 +48,21 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
         if (!response.ok) throw new Error("Failed to update login details");
 
         const result = await response.json();
-        console.log("✅ Login details updated:", result);
+        console.log(" Login details updated:", result);
 
-        // 🟢 Show success toast
-        self.createAccount();
+        // Show success toast
+        toastService.showToastMessage("Account created successfully!", "success");
 
-        // 🟢 Navigate after toast disappears (small delay)
+
+        // Navigate after toast disappears (small delay)
         setTimeout(() => {
           self.nextButtonClick();
         }, 800);
 
       } catch (error) {
         console.error("Error saving login details:", error);
-        alert("⚠️ Unable to save details. Please try again.");
+        toastService.showToastMessage("Unable to save details. Please try again.", "error");
+
       }
     };
   }

@@ -24,14 +24,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
     // -------------------------
     // Step tracking
     // -------------------------
-    // self.steps = ko.observableArray([
-    //   { number: 1, title: 'Account Type' },
-    //   { number: 2, title: 'Account Details' },
-    //   { number: 3, title: 'Verification' },
-    //   { number: 4, title: 'Login Details' }
-    // ]);
-
-    // self.currentStep = ko.observable(2);
+    
     wizardState.currentStep(2); // Ensure wizardState is synced
 
     // -------------------------
@@ -109,7 +102,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
         .then(data => {
           self.isLoading(false);
           if (data.statusCode === 200 && data.data) {
-            // ✅ Verification success
+            //  Verification success
             self.isMatched(true);
             wizardState.accountTitle(data.data.accountTitle);
             wizardState.phoneNumber(data.data.phoneNumber);

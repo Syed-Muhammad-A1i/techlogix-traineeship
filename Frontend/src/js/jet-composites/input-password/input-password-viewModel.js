@@ -1,11 +1,13 @@
 /**
  * Password Step ViewModel for Oracle JET Account Opening Wizard
  */
-define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardState, $) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], function(oj, ko, wizardState, toastService) {
     'use strict';
     
     function PasswordStepViewModel() {
         var self = this;
+
+        self.toastService = toastService;
         
         // Next button click handler in your component
         self.nextButtonClick = function() {
@@ -119,21 +121,13 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             return self.password().length >= 8 && self.passwordsMatch();
         });
 
-        // ✅ Helper: Check if password is alphanumeric
+        //  Helper: Check if password is alphanumeric
         self.isAlphanumeric = function(pwd) {
             return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&#^()_+\-={}\[\]:;"'<>,.~`|\\\/]+$/.test(pwd);
 
         };
 
-
-        // ✅ Helper: Show toast message
-        self.showToastMessage = function(message) {
-            self.toastMessage(message);
-            self.showToast(true);
-            setTimeout(() => self.showToast(false), 3000);
-        };
-
-        // ✅ Helper: Hash password using SHA-256
+        //  Helper: Hash password using SHA-256
         self.hashPassword = async function(password) {
             const encoder = new TextEncoder();
             const data = encoder.encode(password);
@@ -154,33 +148,33 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function(oj, ko, wizardS
             const pwd = self.password();
             const strength = self.strength();
 
-            // 🚫 Empty password check
+            //  Empty password check
             if (!pwd) {
-                self.showToastMessage("⚠️ Password cannot be empty.");
+                toastService.showToastMessage('Password cannot be empty.', 'error');
                 return;
             }
 
-            // 🚫 Non-alphanumeric check
+            //  Non-alphanumeric check
             if (!self.isAlphanumeric(pwd)) {
-                self.showToastMessage("Password must be alphanumeric.");
+                toastService.showToastMessage("Password must be alphanumeric.", "error");
                 return;
             }
 
-            // 🚫 Weak password check (strength <= 1 means weak)
+            //  Weak password check (strength <= 1 means weak)
             if (strength <= 1) {
-                self.showToastMessage("Password is too weak. Please make it stronger (use letters + numbers, min 8 chars).");
+                toastService.showToastMessage("Password is too weak. Please make it stronger (use letters + numbers, min 8 chars).", "error");
                 return;
             }
 
-            // 🚫 Password match check
+            //  Password match check
             if (!self.passwordsMatch()) {
-                self.showToastMessage("Please ensure passwords match.");
+                toastService.showToastMessage("Please ensure passwords match.", "error");
                 return;
             }
             
             const hashedPassword = await self.hashPassword(pwd);
             console.log("Hashed Password:", hashedPassword);
-            // ✅ Passed all checks — proceed
+            //  Passed all checks — proceed
             wizardState.password(hashedPassword);
             self.nextButtonClick();
         };

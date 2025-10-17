@@ -1,6 +1,8 @@
-define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, wizardState) {
+define(['knockout', 'ojs/ojrouter', 'state/wizardState', 'service/toastService'], function (ko, Router, wizardState, toastService) {
   function Page1ViewModel() {
     var self = this;
+
+    self.toastService = toastService;
 
     // -------------------------
     // Navigation handlers
@@ -21,15 +23,10 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
 
     // -------------------------
     // Step tracking
-    // // -------------------------
-    // self.steps = ko.observableArray([
-    //   { number: 1, title: 'Account Type' },
-    //   { number: 2, title: 'Account Details' },
-    //   { number: 3, title: 'Verification' },
-    //   { number: 4, title: 'Login Details' }
-    // ]);
-    // self.currentStep = ko.observable(1);
+    // -------------------------
+    
     wizardState.currentStep(1); // Ensure wizardState is synced
+   
     // -------------------------
     // Shared State (wizardState)
     // -------------------------
@@ -89,6 +86,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
       if (!self.isCnicValid()) {
         self.isMatched(false);
         self.cnicErrorMessage(" CNIC must be 13 digits");
+        
       } else {
         self.cnicErrorMessage("");
       }
@@ -117,6 +115,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
         if (!response.ok) {
           self.isMatched(false);
           self.cnicErrorMessage(result.message || "CNIC not found");
+          toastService.showToastMessage(result.message || "CNIC not found", "error");
           return false;
         }
 
@@ -128,6 +127,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
       } catch (error) {
         console.error("Error verifying CNIC:", error);
         self.cnicErrorMessage("⚠️ Server issue. Please try again.");
+        toastService.showToastMessage("⚠️ Server issue. Please try again.", "error");
         self.isMatched(false);
         // self.BackendcallDone(true);
         return false;
@@ -145,12 +145,12 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState'], function (ko, Router, 
       self.cnicEdited(true);
 
       if (!self.selectedAccountType()) {
-        alert("⚠️ Please select an account type first.");
+        toastService.showToastMessage("⚠️ Please select an account type first.", "error");
         return;
       }
 
       if (!self.isCnicValid()) {
-        alert("⚠️ Please enter a valid 13-digit CNIC.");
+        toastService.showToastMessage("⚠️ Please enter a valid 13-digit CNIC.", "error");
         return;
       }
 

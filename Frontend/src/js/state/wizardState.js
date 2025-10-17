@@ -50,7 +50,7 @@ define(['knockout'], function(ko) {
     }
   }
 
-  // ✅ Clear all data from observables + sessionStorage
+  //  Clear all data from observables + sessionStorage
   wizardState.clear = function() {
     wizardState.cnic('');
     wizardState.accountType('Individual');
