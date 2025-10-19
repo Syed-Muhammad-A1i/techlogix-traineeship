@@ -16,14 +16,14 @@ public class AccountSummaryController {
     @Autowired
     private AccountSummaryService summaryService;
 
-    // ✅ Get single record by CNIC
+    //  Get single record by CNIC
     @GetMapping("/summary/{cnic}")
     public ResponseEntity<ApiResponse<AccountSummaryView>> getAccountSummary(@PathVariable String cnic) {
         ApiResponse<AccountSummaryView> response = summaryService.getSummaryByCnic(cnic);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
-    // ✅ Get all records
+    //  Get all records
     @GetMapping("/summary")
     public ResponseEntity<ApiResponse<List<AccountSummaryView>>> getAllAccountSummaries() {
         ApiResponse<List<AccountSummaryView>> response = summaryService.getAllSummaries();

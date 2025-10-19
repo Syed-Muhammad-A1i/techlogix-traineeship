@@ -15,9 +15,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountController {
+    //constructor injection
+    private final AccountService accountService;
 
-    @Autowired
-    private AccountService accountService;
+    public AccountController(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     // GET: Fetch account by CNIC
     @GetMapping("/{cnic}")

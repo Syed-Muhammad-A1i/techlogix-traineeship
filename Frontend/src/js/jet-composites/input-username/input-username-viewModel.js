@@ -4,6 +4,8 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
   function UsernameStepViewModel() {
     var self = this;
 
+    self.toastService = toastService;
+
     // -------------------------
     // Navigation Handlers
     // -------------------------
@@ -49,6 +51,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
 
       if (/\s/.test(newUsername)) {
         self.errorMessage('Username cannot contain spaces.');
+        self.toastService.showToastMessage('Username cannot contain spaces.', 'error');
         self.isAvailable(false);
         self.backendDone(true);
         return; // stop here, don’t call backend
@@ -66,10 +69,12 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
 
             if (data.statusCode === 200) {
               self.successMessage(data.message);
+              self.toastService.showToastMessage(data.message || "Username is available", "success");
               self.isAvailable(true);
               self.errorMessage('');
             } else {
               self.errorMessage(data.message || 'Invalid username');
+              self.toastService.showToastMessage(data.message || "Invalid username", "error");
               self.isAvailable(false);
               self.successMessage('');
             }
@@ -78,6 +83,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
             self.isChecking(false);
             self.backendDone(true);
             self.errorMessage('Error verifying username');
+            self.toastService.showToastMessage('Error verifying username', 'error');
             console.error('Username check error:', err);
           });
       }, 600); // 600ms debounce
@@ -119,8 +125,11 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
         return;
       }
 
-      self.nextButtonClick();
-      oj.Logger.info('Proceeding with Username: ' + self.username());
+      setTimeout(() => {
+          self.nextButtonClick();
+        }, 1000);
+ 
+        oj.Logger.info('Proceeding with Username: ' + self.username());
     };
 
   }

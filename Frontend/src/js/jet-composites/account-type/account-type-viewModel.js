@@ -119,6 +119,7 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState', 'service/toastService']
           return false;
         }
 
+        // toastService.showToastMessage(result.message || "CNIC verified successfully", "success");
         self.isMatched(true);
         self.cnicErrorMessage("");
         self.BackendcallDone(true);
@@ -157,7 +158,9 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState', 'service/toastService']
       const verified = await self.checkCnicInBackend();
       self.BackendcallDone(true);
       if (verified) {
-        self.nextButtonClick();
+        setTimeout(() => {
+          self.nextButtonClick();
+        }, 1000);
       }
     };
   }

@@ -1,8 +1,10 @@
-define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizardState, $) {
+define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], function (oj, ko, wizardState, toastService) {
   'use strict';
 
   function AccountDetailsViewModel() {
     var self = this;
+
+    self.toastService = toastService;
 
     // -------------------------
     // Navigation handlers
@@ -107,6 +109,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
             wizardState.accountTitle(data.data.accountTitle);
             wizardState.phoneNumber(data.data.phoneNumber);
             wizardState.username(data.data.phoneNumber);
+            // toastService.showToastMessage(data.message || "Account Number verified successfully", "success");
 
             console.log("Verified Account Title:", data.data.accountTitle);
             console.log("Verified Phone Number:", data.data.phoneNumber);
@@ -115,6 +118,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
             //  Verification failed
             self.isMatched(false);
             self.cnicErrorMessage(" Account Number Not Matched");
+            toastService.showToastMessage("Account Number Not Matched", "error");
             return false;
           }
         })
@@ -122,6 +126,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
           self.isLoading(false);
           self.isMatched(false);
           self.cnicErrorMessage("⚠️ Error verifying account");
+          toastService.showToastMessage("⚠️ Error verifying account", "error");
           console.error("Verification error:", err);
           return false;
         })
@@ -143,12 +148,15 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState'], function (oj, ko, wizard
 
       if (!self.isAccNoValid()) {
         self.cnicErrorMessage(" Please enter a valid 14-digit Account Number");
+        toastService.showToastMessage("Please enter a valid 14-digit Account Number", "error");
         return;
       }
 
       const verified = await self.verifyAccount();
       if (verified) {
-        self.nextButtonClick();
+        setTimeout(() => {
+          self.nextButtonClick();
+        }, 1000);
         oj.Logger.info("Proceeding with Account Number: " + self.formattedAccountNumber());
       }
     };

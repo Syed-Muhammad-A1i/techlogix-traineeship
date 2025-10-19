@@ -57,7 +57,7 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
         // Navigate after toast disappears (small delay)
         setTimeout(() => {
           self.nextButtonClick();
-        }, 800);
+        }, 1000);
 
       } catch (error) {
         console.error("Error saving login details:", error);
