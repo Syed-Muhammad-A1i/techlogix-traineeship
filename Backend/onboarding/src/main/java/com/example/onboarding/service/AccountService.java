@@ -49,6 +49,8 @@ public class AccountService {
     // Create new account
     public Account createAccount(Account account) {
         try {
+            // Set creation timestamp
+            account.setCreatedAt(LocalDateTime.now());
             return accountRepository.save(account);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create account");

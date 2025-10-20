@@ -73,5 +73,10 @@ define(['knockout'], function(ko) {
     if (ko.isObservable(obs)) obs.subscribe(saveState);
   });
 
+  // Clear state when the page is refreshed/reloaded
+  window.addEventListener('beforeunload', function () {
+    wizardState.clear();
+  });
+
   return wizardState;
 });

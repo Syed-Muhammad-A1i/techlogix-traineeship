@@ -158,9 +158,9 @@ define(['knockout', 'ojs/ojrouter', 'state/wizardState', 'service/toastService']
       const verified = await self.checkCnicInBackend();
       self.BackendcallDone(true);
       if (verified) {
-        setTimeout(() => {
+     
           self.nextButtonClick();
-        }, 1000);
+     
       }
     };
   }

@@ -154,9 +154,8 @@ define(['ojs/ojcore', 'knockout', 'state/wizardState', 'service/toastService'], 
 
       const verified = await self.verifyAccount();
       if (verified) {
-        setTimeout(() => {
           self.nextButtonClick();
-        }, 1000);
+        
         oj.Logger.info("Proceeding with Account Number: " + self.formattedAccountNumber());
       }
     };
