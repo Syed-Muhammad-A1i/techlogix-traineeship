@@ -5,8 +5,7 @@ define(['knockout',
   '../jet-composites/input-username/loader', 
   '../jet-composites/input-password/loader', 
   '../jet-composites/terms-conditions/loader',
-  '../jet-composites/user-confirmation/loader',
-  '../jet-composites/login-page/loader'
+  '../jet-composites/user-confirmation/loader'
   
 ], function(ko, wizardState) {
   function AppControllerViewModel() {

@@ -30,11 +30,11 @@ public class AccountService {
 
     // Get account by CNIC
     public void checkCnicExists(String cnic) {
-        // Step 1️⃣: Check if account exists
+        // Step 1: Check if account exists
         Account account = accountRepository.findByCnic(cnic)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found for this CNIC"));
 
-        // Step 2️⃣: Check if account is active
+        // Step 2: Check if account is active
         if (!account.isAccountStatus())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Account is inactive");
 
